@@ -1,0 +1,117 @@
+# ---------------------------------------------------------------------------
+# Experiment Configuration
+# ---------------------------------------------------------------------------
+
+project:
+  gcp_project_id: gen-lang-client-0470307714
+  gcp_region: us-central1
+  gcs_bucket: gs://gen-lang-client-0470307714-sld-agentic-rag
+
+# ---------------------------------------------------------------------------
+# Domains under study
+# ---------------------------------------------------------------------------
+domains:
+  - name: WordLift Blog
+    base_url: https://wordlift.io/blog
+    vertical: editorial
+    account_id: wl0216
+    entity_types: [Article, Thing, Person, Organization]
+    description: Editorial content about SEO, AI, and knowledge graphs
+
+  - name: Express Legal Funding
+    base_url: https://www.expresslegalfunding.com
+    vertical: legal
+    account_id: wl156383
+    entity_types: [Service, FinancialProduct, Organization]
+    description: Pre-settlement legal funding services
+
+  - name: SalzburgerLand
+    base_url: https://www.salzburgerland.com
+    vertical: travel
+    account_id: salzburgerland
+    entity_base_url: http://open.salzburgerland.com/de
+    entity_types: [LodgingBusiness, TouristAttraction, FoodEstablishment, Place]
+    description: Tourism destination in Austria, entities at open.salzburgerland.com
+
+  - name: BlackBriar
+    base_url: https://myblackbriar.com
+    vertical: ecommerce
+    account_id: wl172055
+    entity_types: [Product, Brand, Offer, Organization]
+    description: Premium backpacks, duffel bags, and wheeled bags
+
+# ---------------------------------------------------------------------------
+# Retrieval parameters
+# ---------------------------------------------------------------------------
+retrieval:
+  top_k: 10
+  hybrid_search: true
+  semantic_weight: 0.7
+  keyword_weight: 0.3
+
+# ---------------------------------------------------------------------------
+# Agentic RAG parameters
+# ---------------------------------------------------------------------------
+agentic:
+  max_traversal_hops: 2
+  max_links_per_hop: 5
+  agent_timeout_seconds: 120
+  content_negotiation_accept: application/ld+json
+
+# ---------------------------------------------------------------------------
+# Models
+# ---------------------------------------------------------------------------
+models:
+  generation: gemini-2.0-flash
+  judge: gemini-2.0-flash
+  embedding: text-embedding-005
+
+# ---------------------------------------------------------------------------
+# Evaluation
+# ---------------------------------------------------------------------------
+evaluation:
+  queries_per_entity: 3
+  query_types:
+    - factual
+    - relational
+    - comparative
+  judge_temperature: 0.0
+  judge_max_tokens: 1024
+  human_spot_check_sample_size: 20
+  statistical_tests:
+    method: paired_t_test
+    correction: bonferroni
+    confidence_level: 0.95
+
+# ---------------------------------------------------------------------------
+# Experiment conditions
+# ---------------------------------------------------------------------------
+conditions:
+  C1:
+    document_format: plain_html
+    retrieval_mode: standard
+    description: Plain HTML, standard RAG (baseline)
+  C2:
+    document_format: html_jsonld
+    retrieval_mode: standard
+    description: HTML + JSON-LD structured data, standard RAG
+  C3:
+    document_format: enhanced
+    retrieval_mode: standard
+    description: Enhanced entity page, standard RAG
+  C4:
+    document_format: plain_html
+    retrieval_mode: agentic
+    description: Plain HTML, agentic RAG
+  C5:
+    document_format: html_jsonld
+    retrieval_mode: agentic
+    description: HTML + JSON-LD, agentic RAG
+  C6:
+    document_format: enhanced
+    retrieval_mode: agentic
+    description: Enhanced entity page + llms.txt + SKILL, agentic RAG
+  C6_PLUS:
+    document_format: enhanced_plus
+    retrieval_mode: agentic
+    description: WordLift HTML + summary + llms.txt + SKILL, agentic RAG

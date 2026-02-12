@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" prefix="schema: http://schema.org/">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ entity_name }} — {{ domain_name }}</title>
+    <meta name="description" content="{{ entity_description[:160] }}">
+    {% if canonical_url %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+
+    {# Embedded JSON-LD structured data #}
+    {% if jsonld_block %}
+    <script type="application/ld+json">
+    {{ jsonld_block }}
+    </script>
+    {% endif %}
+
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --accent: #0f3460;
+            --link: #3a86ff;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --border: #e0e0e0;
+            --text: #2d2d2d;
+            --text-muted: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* -- Header -- */
+        .entity-header {
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .entity-header h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .entity-meta {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .entity-meta code {
+            background: #e8e8e8;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.82rem;
+        }
+
+        .entity-meta a {
+            color: var(--link);
+            text-decoration: none;
+        }
+
+        .entity-meta a:hover {
+            text-decoration: underline;
+        }
+
+        /* -- Sections -- */
+        section {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        section h2 {
+            font-size: 1.15rem;
+            color: var(--accent);
+            margin-bottom: 0.8rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.4rem;
+        }
+
+        .description {
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* -- Statements table (Wikidata-style) -- */
+        .statements-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .statements-table th {
+            text-align: left;
+            padding: 0.5rem 0.8rem;
+            background: #f0f4f8;
+            border-bottom: 2px solid var(--border);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .statements-table td {
+            padding: 0.45rem 0.8rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .statements-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .statements-table .prop-name {
+            font-weight: 600;
+            color: var(--accent);
+            white-space: nowrap;
+            width: 180px;
+        }
+
+        .statements-table a {
+            color: var(--link);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .statements-table a:hover {
+            text-decoration: underline;
+        }
+
+        /* -- Linked entities -- */
+        .linked-entities ul {
+            list-style: none;
+        }
+
+        .linked-entities li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .linked-entities li:last-child {
+            border-bottom: none;
+        }
+
+        .linked-entities .relation {
+            font-weight: 600;
+            color: var(--accent);
+            min-width: 120px;
+            display: inline-block;
+        }
+
+        .linked-entities a {
+            color: var(--link);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .linked-entities a:hover {
+            text-decoration: underline;
+        }
+
+        /* -- Agent instructions -- */
+        .agent-instructions {
+            background: #fffbf0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .agent-instructions pre {
+            font-size: 0.82rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            margin: 0;
+            color: var(--text);
+        }
+
+        /* -- Sitelinks / canonical -- */
+        .sitelinks a {
+            display: inline-block;
+            padding: 0.4rem 1rem;
+            background: var(--link);
+            color: #fff;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sitelinks a:hover {
+            opacity: 0.85;
+        }
+
+        .sitelinks .secondary {
+            background: transparent;
+            color: var(--link);
+            border: 1px solid var(--link);
+        }
+
+        footer {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        footer a {
+            color: var(--link);
+        }
+    </style>
+</head>
+
+<body vocab="http://schema.org/" typeof="{{ entity_types | join(' ') }}">
+
+    {# ── 1. Entity Header (label + types + canonical) ── #}
+    <div class="entity-header">
+        <h1 property="name">{{ entity_name }}</h1>
+        <div class="entity-meta">
+            {% for t in entity_types %}
+            <code>schema:{{ t }}</code>
+            {% endfor %}
+            {% if canonical_url %}
+            | <a href="{{ canonical_url }}" title="Main web page">🌐 Web Page</a>
+            {% endif %}
+            | <a href="{{ entity_url }}" title="Entity URI in the Knowledge Graph"
+                style="color: var(--text-muted); font-size: 0.82rem;">📊 Entity URI</a>
+        </div>
+    </div>
+
+    {# ── 2. Description ── #}
+    {% if entity_description %}
+    <section>
+        <h2>Description</h2>
+        <p class="description" property="description">{{ entity_description }}</p>
+    </section>
+    {% endif %}
+
+    {# ── 3. Statements (Wikidata-style property table) ── #}
+    {% if statements %}
+    <section>
+        <h2>Statements</h2>
+        <table class="statements-table">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stmt in statements %}
+                <tr>
+                    <td class="prop-name">
+                        {% if stmt.prop_url %}<a href="{{ stmt.prop_url }}">{{ stmt.prop_label }}</a>{% else %}{{
+                        stmt.prop_label }}{% endif %}
+                    </td>
+                    <td>
+                        {% if stmt.value_url %}<a href="{{ stmt.value_url }}">{{ stmt.value_label }}</a>{% else %}{{
+                        stmt.value_label }}{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    {% endif %}
+
+    {# ── 4. Linked Entities (graph navigation) ── #}
+    {% if linked_entities %}
+    <section class="linked-entities">
+        <h2>Related Entities</h2>
+        <p>Explore the knowledge graph by following these links. Each URI supports content
+            negotiation — append <code>.json</code> for JSON-LD, <code>.ttl</code> for Turtle,
+            or <code>.html</code> for a human-readable view.</p>
+        <ul>
+            {% for le in linked_entities %}
+            <li>
+                <span class="relation">{{ le.relation }}:</span>
+                <a href="{{ le.html_url }}" rel="{{ le.relation }}">{{ le.name or le.url }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {# ── 5. Sitelinks (canonical web page) ── #}
+    {% if canonical_url %}
+    <section>
+        <h2>Sitelinks</h2>
+        <div class="sitelinks">
+            <a href="{{ canonical_url }}">🌐 Visit Web Page</a>
+            <a href="{{ entity_url }}.json" class="secondary">📄 JSON-LD</a>
+            <a href="{{ entity_url }}.ttl" class="secondary">🐢 Turtle</a>
+            <a href="{{ entity_url }}.rdf" class="secondary">📋 RDF/XML</a>
+        </div>
+    </section>
+    {% endif %}
+
+    {# ── 6. Agent Instructions ── #}
+    <section class="agent-instructions">
+        <h2>🤖 Agent Instructions</h2>
+        <pre>{{ llms_instructions }}</pre>
+    </section>
+
+    <footer>
+        Entity served by a <a href="https://www.w3.org/wiki/LinkedData">Linked Data Platform</a>
+        with full <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">content
+            negotiation</a> support.
+    </footer>
+
+</body>
+
+</html>

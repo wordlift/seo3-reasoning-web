@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" prefix="schema: http://schema.org/">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ entity_name }} — {{ domain_name }}</title>
+    <meta name="description" content="{{ entity_description[:160] }}">
+
+    {# Embedded JSON-LD structured data #}
+    <script type="application/ld+json">
+    {{ jsonld_data }}
+    </script>
+
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --accent: #0f3460;
+            --link: #3a86ff;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --border: #e0e0e0;
+            --text: #2d2d2d;
+            --text-muted: #6c757d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg); color: var(--text);
+            line-height: 1.6; padding: 2rem;
+            max-width: 900px; margin: 0 auto;
+        }
+        nav.breadcrumb { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        nav.breadcrumb a { color: var(--link); text-decoration: none; }
+        nav.breadcrumb span::before { content: " › "; }
+        h1 { font-size: 1.8rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .entity-type { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+        .entity-type code { background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 0.85rem; }
+        section { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        section h2 { font-size: 1.2rem; color: var(--accent); margin-bottom: 0.8rem; border-bottom: 2px solid var(--border); padding-bottom: 0.4rem; }
+        .description { font-size: 1rem; line-height: 1.7; }
+        .linked-entities ul { list-style: none; }
+        .linked-entities li { padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .linked-entities li:last-child { border-bottom: none; }
+        .linked-entities .relation { font-weight: 600; color: var(--accent); min-width: 120px; display: inline-block; }
+        .linked-entities a { color: var(--link); text-decoration: none; word-break: break-all; }
+        .linked-entities a:hover { text-decoration: underline; }
+        .offer-card { display: flex; gap: 1rem; align-items: center; padding: 0.8rem; background: #f0f7ff; border-radius: 6px; }
+        .offer-price { font-size: 1.3rem; font-weight: 700; color: var(--accent); }
+        .faq-item { margin-bottom: 1rem; }
+        .faq-item h3 { font-size: 1rem; font-weight: 600; color: var(--primary); }
+        .faq-item p { font-size: 0.95rem; color: var(--text-muted); margin-top: 0.3rem; }
+        .agent-instructions { background: #fffbf0; border-left: 4px solid #f59e0b; }
+        .agent-instructions pre { font-size: 0.85rem; white-space: pre-wrap; word-wrap: break-word; font-family: 'Fira Code', monospace; }
+        footer { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 2rem; }
+        footer a { color: var(--link); }
+    </style>
+</head>
+<body vocab="http://schema.org/" typeof="{{ entity_types | join(' ') }}">
+
+    {# Breadcrumb navigation #}
+    <nav class="breadcrumb" aria-label="Type hierarchy">
+        {% for crumb in breadcrumb %}
+        {% if not loop.first %}<span></span>{% endif %}
+        <a href="https://schema.org/{{ crumb }}">{{ crumb }}</a>
+        {% endfor %}
+    </nav>
+
+    {# Entity header #}
+    <h1 property="name">{{ entity_name }}</h1>
+    <div class="entity-type">
+        Type: {% for t in entity_types %}<code>schema:{{ t }}</code>{% if not loop.last %}, {% endif %}{% endfor %}
+        | <a href="{{ entity_url }}">Canonical URI</a>
+    </div>
+
+    {# Description #}
+    {% if entity_description %}
+    <section>
+        <h2>Description</h2>
+        <p class="description" property="description">{{ entity_description }}</p>
+    </section>
+    {% endif %}
+
+    {# Offers / Pricing #}
+    {% if offers %}
+    <section>
+        <h2>Offers &amp; Pricing</h2>
+        {% for offer in offers %}
+        <div class="offer-card">
+            {% if offer.min_price and offer.max_price %}
+            <span class="offer-price">{{ offer.currency }} {{ offer.min_price }} – {{ offer.max_price }}</span>
+            {% endif %}
+            {% if offer.description %}
+            <span>{{ offer.description }}</span>
+            {% endif %}
+            {% if offer.availability %}
+            <span>({{ offer.availability }})</span>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {# FAQ #}
+    {% if faq_items %}
+    <section>
+        <h2>Frequently Asked Questions</h2>
+        {% for faq in faq_items %}
+        <div class="faq-item" typeof="Question">
+            <h3 property="name">{{ faq.question }}</h3>
+            {% if faq.answer %}
+            <p property="acceptedAnswer" typeof="Answer"><span property="text">{{ faq.answer }}</span></p>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {# Linked entities — visible navigation for agents #}
+    {% if linked_entities %}
+    <section class="linked-entities">
+        <h2>Related Entities</h2>
+        <p>Explore the knowledge graph by following these links. Each URI supports content
+        negotiation — append <code>.json</code> for JSON-LD, <code>.ttl</code> for Turtle,
+        or <code>.html</code> for a human-readable view.</p>
+        <ul>
+            {% for le in linked_entities %}
+            <li>
+                <span class="relation">{{ le.relation }}:</span>
+                <a href="{{ le.html_url }}" rel="{{ le.relation }}">{{ le.url }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+    {# Agent instructions (llms.txt style) #}
+    <section class="agent-instructions">
+        <h2>🤖 Agent Instructions</h2>
+        <pre>{{ llms_instructions }}</pre>
+    </section>
+
+    <footer>
+        Entity served by a <a href="https://www.w3.org/wiki/LinkedData">Linked Data Platform</a>
+        with full <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation">content negotiation</a> support.
+    </footer>
+
+</body>
+</html>

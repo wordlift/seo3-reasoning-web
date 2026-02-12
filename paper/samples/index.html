@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sample Entity Pages — Enhanced Entity Format Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .intro {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .samples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .sample-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .sample-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .domain-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .domain-travel {
+            background: #28a745;
+            color: white;
+            border-top: 4px solid #28a745;
+        }
+
+        .domain-editorial {
+            background: #6f42c1;
+            color: white;
+            border-top: 4px solid #6f42c1;
+        }
+
+        .domain-ecommerce {
+            background: #dc3545;
+            color: white;
+            border-top: 4px solid #dc3545;
+        }
+
+        .domain-legal {
+            background: #17a2b8;
+            color: white;
+            border-top: 4px solid #17a2b8;
+        }
+
+        .card-travel {
+            border-top: 4px solid #28a745;
+        }
+
+        .card-editorial {
+            border-top: 4px solid #6f42c1;
+        }
+
+        .card-ecommerce {
+            border-top: 4px solid #dc3545;
+        }
+
+        .card-legal {
+            border-top: 4px solid #17a2b8;
+        }
+
+        .sample-card h2 {
+            margin: 10px 0;
+            color: #2c3e50;
+            font-size: 1.4em;
+        }
+
+        .sample-card p {
+            color: #666;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .schema-type {
+            font-family: monospace;
+            background: #f1f3f5;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #495057;
+            display: inline-block;
+            margin: 5px 3px 5px 0;
+        }
+
+        .entity-uri {
+            font-family: monospace;
+            font-size: 0.8em;
+            color: #6c757d;
+            word-break: break-all;
+            margin: 8px 0;
+        }
+
+        .features {
+            margin: 15px 0;
+        }
+
+        .features ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+
+        .features li {
+            margin: 5px 0;
+            color: #495057;
+            font-size: 0.95em;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .cta-button:hover {
+            background: #5568d3;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            margin-top: 30px;
+        }
+
+        .context-note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>🔗 Enhanced Entity Page Samples</h1>
+        <p class="subtitle">Real entity data from the experiment knowledge graphs, augmented with the C3/C6 enhanced
+            format</p>
+    </div>
+
+    <div class="intro">
+        <h2>About These Samples</h2>
+        <p>
+            These HTML pages use <strong>real entity data</strong> from the production WordLift knowledge graphs
+            used in the research. Each entity page augments the original structured data with the <strong>enhanced
+                entity page format</strong> used in experimental conditions C3 and C6 from
+            <em>"Structured Linked Data as a Memory Layer for Agent-Orchestrated Retrieval"</em>.
+        </p>
+        <p>The enhanced format adds:</p>
+        <ul>
+            <li><strong>Schema.org type breadcrumbs</strong> showing entity hierarchy</li>
+            <li><strong>Embedded JSON-LD</strong> matching the production knowledge graph data</li>
+            <li><strong>Linked entity navigation</strong> with dereferenceable URIs and content negotiation</li>
+            <li><strong>Agent instructions</strong> (llms.txt style) with public search endpoints for KG traversal</li>
+            <li><strong>Canonical links</strong> to the original <code>schema:url</code> to avoid confusing traditional
+                search engines</li>
+        </ul>
+
+        <div class="context-note">
+            <strong>📊 Experimental Context:</strong> The enhanced entity format yielded a <strong>+29.5% accuracy
+                improvement</strong>
+            in standard RAG (C1→C3) and a <strong>+30.8% improvement</strong> in the full pipeline (C1→C6). The key
+            insight:
+            structured data must be <em>surfaced</em> with navigational affordances, not just embedded as JSON-LD.
+        </div>
+    </div>
+
+    <h2 style="text-align: center; margin: 30px 0;">Sample Entity Pages (Real Data)</h2>
+
+    <div class="samples">
+
+        <!-- SalzburgerLand Restaurant -->
+        <div class="sample-card card-travel">
+            <span class="domain-badge domain-travel">Travel Domain</span>
+            <h2>Alpen Restaurant Valeriehaus</h2>
+            <div class="schema-type">schema:FoodEstablishment</div>
+            <div class="entity-uri">@id:
+                http://open.salzburgerland.com/de/FoodEstablishment/alpen-restaurant-valeriehaus</div>
+            <p>
+                Historic alpine restaurant at 1,600m in Sportgastein, named after Emperor Franz Joseph's youngest
+                daughter.
+                Open daily with traditional Austrian cuisine and Hohe Tauern mountain views.
+            </p>
+            <div class="features">
+                <strong>Linked entities:</strong>
+                <ul>
+                    <li><code>containedInPlace</code> → Bad Gastein (Place)</li>
+                    <li><code>address</code> → PostalAddress</li>
+                    <li><code>geo</code> → GeoCoordinates</li>
+                    <li><code>contactPoint</code> → ContactPoint</li>
+                </ul>
+            </div>
+            <a href="salzburgerland_restaurant.html" class="cta-button">View Sample →</a>
+        </div>
+
+        <!-- WordLift Blog Entity -->
+        <div class="sample-card card-editorial">
+            <span class="domain-badge domain-editorial">Editorial Domain</span>
+            <h2>Knowledge Graph</h2>
+            <div class="schema-type">schema:Thing</div>
+            <div class="entity-uri">@id: http://data.wordlift.io/wl0216/entity/knowledge_graph</div>
+            <p>
+                Core concept entity from the WordLift knowledge graph with 9 related concept entities
+                and sameAs links to Wikipedia and Wikidata.
+            </p>
+            <div class="features">
+                <strong>Linked entities (9 relations):</strong>
+                <ul>
+                    <li><code>dct:relation</code> → JSON-LD, Linked Data, Schema.org</li>
+                    <li><code>dct:relation</code> → Google Knowledge Graph, Ontologies</li>
+                    <li><code>dct:relation</code> → Semantic Web, SEO, ML, AI</li>
+                    <li><code>sameAs</code> → Wikipedia, Wikidata</li>
+                </ul>
+            </div>
+            <a href="wordlift_blog_post.html" class="cta-button">View Sample →</a>
+        </div>
+
+        <!-- BlackBriar Product -->
+        <div class="sample-card card-ecommerce">
+            <span class="domain-badge domain-ecommerce">E-commerce Domain</span>
+            <h2>65L Expedition Backpack</h2>
+            <div class="schema-type">schema:Product</div>
+            <div class="entity-uri">@id: https://data.wordlift.io/wl172055/01/850066902011</div>
+            <p>
+                Real product from the BlackBriar USA Shopify store with GS1 Digital Link as identifier,
+                GTIN-12, SKU, and structured product data.
+            </p>
+            <div class="features">
+                <strong>Linked entities:</strong>
+                <ul>
+                    <li><code>brand</code> → BlackBriar USA (Brand)</li>
+                    <li><code>offers</code> → Offer (price, availability)</li>
+                    <li><code>audience</code> → PeopleAudience</li>
+                    <li><code>gs1:defaultLink</code> → myblackbriar.com product page</li>
+                </ul>
+            </div>
+            <a href="blackbriar_product.html" class="cta-button">View Sample →</a>
+        </div>
+
+        <!-- Express Legal Funding -->
+        <div class="sample-card card-legal">
+            <span class="domain-badge domain-legal">Legal Domain</span>
+            <h2>Pre-Settlement Funding</h2>
+            <div>
+                <span class="schema-type">schema:Thing</span>
+                <span class="schema-type">schema:FAQPage</span>
+                <span class="schema-type">schema:CreativeWork</span>
+            </div>
+            <div class="entity-uri">@id: https://data.wordlift.io/wl156383/entity/pre-settlement-funding</div>
+            <p>
+                Glossary entity with multi-type classification, 6 FAQ mainEntity questions,
+                alternate names, and sameAs links to Wikipedia, Wikidata, and DBpedia.
+            </p>
+            <div class="features">
+                <strong>Linked entities:</strong>
+                <ul>
+                    <li><code>mainEntity</code> → 6 FAQ Question entries</li>
+                    <li><code>sameAs</code> → Legal Financing entity, Wikipedia, Wikidata, DBpedia</li>
+                    <li><code>image</code> → 3 ImageObject entities</li>
+                    <li><code>alternateName</code> → Lawsuit loans, Legal Financing, etc.</li>
+                </ul>
+            </div>
+            <a href="expresslegal_article.html" class="cta-button">View Sample →</a>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <h3>Technical Notes</h3>
+        <ul style="text-align: left; max-width: 700px; margin: 20px auto;">
+            <li><strong>Real data</strong>: All entity URIs, properties, and linked entities come from the production
+                knowledge graphs used in the experiment</li>
+            <li><strong>Canonical links</strong>: Each page includes <code>&lt;link rel="canonical"&gt;</code> pointing
+                to the entity's <code>schema:url</code> to avoid confusing traditional search engines</li>
+            <li><strong>Public search API</strong>: Agent instructions reference a <code>/search</code> endpoint (no API
+                key required) for KG traversal by external agents</li>
+            <li><strong>Content negotiation</strong>: All entity URIs support <code>Accept: application/ld+json</code>
+                for machine-readable formats</li>
+        </ul>
+        <p style="margin-top: 20px;">
+            <strong>Source:</strong> <em>Structured Linked Data as a Memory Layer for Agent-Orchestrated
+                Retrieval</em><br>
+            <small>Experimental conditions C3 (Enhanced + Standard RAG) and C6 (Enhanced + Agentic RAG)</small>
+        </p>
+    </div>
+
+</body>
+
+</html>

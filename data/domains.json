@@ -1,0 +1,75 @@
+{
+  "domains": [
+    {
+      "name": "WordLift Blog",
+      "base_url": "https://wordlift.io/blog",
+      "vertical": "editorial",
+      "account_id": "wl0216",
+      "entity_types": [
+        "Article",
+        "Thing",
+        "Person",
+        "Organization"
+      ],
+      "sample_entities": [
+        {
+          "path": "/en/entity/knowledge-graph/",
+          "entity_id": "entity/knowledge-graph",
+          "type": "Thing"
+        },
+        {
+          "path": "/en/entity/andrea_volpini",
+          "entity_id": "entity/andrea_volpini",
+          "type": "Person"
+        }
+      ]
+    },
+    {
+      "name": "Express Legal Funding",
+      "base_url": "https://www.expresslegalfunding.com",
+      "vertical": "legal",
+      "account_id": "wl156383",
+      "entity_types": [
+        "Service",
+        "FinancialProduct",
+        "Organization"
+      ],
+      "description": "Pre-settlement legal funding services",
+      "sample_entities": []
+    },
+    {
+      "name": "SalzburgerLand",
+      "base_url": "https://www.salzburgerland.com",
+      "vertical": "travel",
+      "account_id": "salzburgerland",
+      "entity_base_url": "http://open.salzburgerland.com/de",
+      "entity_types": [
+        "LodgingBusiness",
+        "TouristAttraction",
+        "Place",
+        "Organization"
+      ],
+      "description": "Tourism destination in Austria — entities published via Open Data at open.salzburgerland.com",
+      "sample_entities": [
+        {
+          "entity_id": "LodgingBusiness/pritzhuette-1-800-m",
+          "type": "LodgingBusiness"
+        }
+      ]
+    },
+    {
+      "name": "BlackBriar",
+      "base_url": "https://myblackbriar.com",
+      "vertical": "ecommerce",
+      "account_id": "wl172055",
+      "entity_types": [
+        "Product",
+        "Brand",
+        "Offer",
+        "Organization"
+      ],
+      "description": "Premium backpacks, duffel bags, and wheeled bags",
+      "sample_entities": []
+    }
+  ]
+}

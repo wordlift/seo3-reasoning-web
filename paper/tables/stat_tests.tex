@@ -1,0 +1,38 @@
+\begin{table}[t]
+\centering
+\caption{Paired $t$-tests with Bonferroni correction ($\alpha = 0.05$, $n_{\text{tests}} = 12$).}
+\label{tab:stat_tests}
+\begin{tabular}{@{}llrrrrl@{}}
+\toprule
+\textbf{Hyp.} & \textbf{Metric} & \textbf{$\Delta$} & \textbf{$t$} & \textbf{$p_{\text{adj}}$} & \textbf{$d$} & \textbf{Sig.} \\
+\midrule
+\multicolumn{7}{l}{\textit{Structured data (standard RAG) (C1 vs C2)}} \\
+  & Accuracy & +0.17 & -3.12 & 2.4e-02 & 0.18 & * \\
+  & Completeness & +0.18 & -2.86 & 5.5e-02 & 0.16 & n.s. \\
+\midrule
+\multicolumn{7}{l}{\textit{Enhanced pages (standard RAG) (C1 vs C3)}} \\
+  & Accuracy & +1.04 & -10.53 & 2.7e-21 & 0.60 & *** \\
+  & Completeness & +1.42 & -13.00 & 5.0e-30 & 0.74 & *** \\
+\midrule
+\multicolumn{7}{l}{\textit{Agentic RAG vs standard (C2 vs C5)}} \\
+  & Accuracy & +0.50 & -5.22 & 4.0e-06 & 0.30 & *** \\
+  & Completeness & +0.74 & -6.75 & 9.1e-10 & 0.38 & *** \\
+\midrule
+\multicolumn{7}{l}{\textit{Enhanced pages (agentic RAG) (C5 vs C6)}} \\
+  & Accuracy & +0.34 & -5.08 & 7.7e-06 & 0.29 & *** \\
+  & Completeness & +0.40 & -4.89 & 2.0e-05 & 0.28 & *** \\
+\midrule
+\multicolumn{7}{l}{\textit{Enhanced+ vs Enhanced (agentic RAG) (C6 vs C6+)}} \\
+  & Accuracy & +0.06 & -1.47 & 1.0 & 0.08 & n.s. \\
+  & Completeness & +0.07 & -1.22 & 1.0 & 0.07 & n.s. \\
+\midrule
+\multicolumn{7}{l}{\textit{Full pipeline vs baseline (C1 vs C6)}} \\
+  & Accuracy & +1.04 & -10.66 & 1.0e-21 & 0.61 & *** \\
+  & Completeness & +1.34 & -13.27 & 5.1e-31 & 0.75 & *** \\
+\midrule
+\multicolumn{7}{l}{\textit{Full pipeline+ vs baseline (C1 vs C6+)}} \\
+  & Accuracy & +1.10 & -11.42 & 2.3e-24 & 0.65 & *** \\
+  & Completeness & +1.41 & -13.60 & 2.8e-32 & 0.77 & *** \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" prefix="schema: http://schema.org/">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Knowledge Graph — WordLift Entity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- No canonical: this entity has no schema:url set in the KG -->
+    <script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Thing",
+  "@id": "http://data.wordlift.io/wl0216/entity/knowledge_graph",
+  "name": "Knowledge Graph",
+  "description": "A knowledge graph organizes information so that both people and machines can understand the data and how its pieces are connected. Although the concept has been studied for decades, the term gained widespread recognition in 2012, when Google introduced its Knowledge Graph to enhance search results by focusing on topics rather than individual strings of text. Today, Google's Knowledge Graph contains over 1600 billion facts on nearly 55 billion entities.",
+  "sameAs": [
+    "https://en.wikipedia.org/wiki/Knowledge_graph",
+    "https://www.wikidata.org/wiki/Q33002955"
+  ],
+  "dct:relation": [
+    {"@id": "http://data.wordlift.io/wl0216/entity/json-ld", "name": "JSON-LD"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/linked_data", "name": "Linked Data"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/google_knowledge_graph", "name": "Google Knowledge Graph"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/schema-org", "name": "Schema.org"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/ontologies", "name": "Ontologies"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/semantic_web", "name": "Semantic Web"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/search_engine_optimization", "name": "Search Engine Optimization"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/machine_learning", "name": "Machine Learning"},
+    {"@id": "http://data.wordlift.io/wl0216/entity/artificial_intelligence", "name": "Artificial Intelligence"}
+  ]
+}
+  </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .breadcrumb {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+
+        .entity-type {
+            display: inline-block;
+            background: #6f42c1;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #6f42c1;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            border-left: 4px solid #6f42c1;
+            padding-left: 10px;
+        }
+
+        .linked-entities {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .linked-entities ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .linked-entities li {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-left: 3px solid #6f42c1;
+            border-radius: 3px;
+        }
+
+        .relation {
+            font-weight: bold;
+            color: #6f42c1;
+            margin-right: 8px;
+        }
+
+        .linked-entities a {
+            color: #007bff;
+            text-decoration: none;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .linked-entities a:hover {
+            text-decoration: underline;
+        }
+
+        .agent-instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+
+        .agent-instructions h2 {
+            color: #856404;
+            border-color: #ffc107;
+        }
+
+        .agent-instructions pre {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .properties {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .property {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #6c757d;
+        }
+
+        .property-label {
+            font-weight: bold;
+            color: #495057;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .property-value {
+            color: #212529;
+        }
+
+        .sameas {
+            margin: 20px 0;
+        }
+
+        .sameas a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #6f42c1;
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+
+        .sameas a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body vocab="http://schema.org/" typeof="Thing">
+
+    <!-- Type breadcrumbs -->
+    <nav class="breadcrumb">
+        Thing
+    </nav>
+
+    <h1 property="name">Knowledge Graph</h1>
+    <div class="entity-type">Type: schema:Thing</div>
+
+    <section>
+        <h2>Description</h2>
+        <p property="description">
+            A knowledge graph organizes information so that both people and machines can understand the data and how its
+            pieces are connected. Although the concept has been studied for decades, the term gained widespread
+            recognition in 2012, when Google introduced its Knowledge Graph to enhance search results by focusing on
+            topics rather than individual strings of text. Today, Google's Knowledge Graph contains over 1600 billion
+            facts on nearly 55 billion entities. This scale shows how central knowledge graphs have become for
+            connecting information on the web and powering modern search.
+        </p>
+        <h3>Technical Definition</h3>
+        <p>A knowledge graph acquires and integrates information into an ontology and applies a reasoner to derive new
+            knowledge. — Lisa Ehrlinger and Wolfram Wöß, University of Linz</p>
+    </section>
+
+    <section>
+        <h2>Key Properties</h2>
+        <div class="properties">
+            <div class="property">
+                <div class="property-label">Entity URI</div>
+                <div class="property-value"><code>http://data.wordlift.io/wl0216/entity/knowledge_graph</code></div>
+            </div>
+            <div class="property">
+                <div class="property-label">Entity Type</div>
+                <div class="property-value">schema:Thing</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sameas">
+        <h2>Same As (External Identifiers)</h2>
+        <a href="https://en.wikipedia.org/wiki/Knowledge_graph" property="sameAs">📖 Wikipedia</a>
+        <a href="https://www.wikidata.org/wiki/Q33002955" property="sameAs">🔗 Wikidata</a>
+    </section>
+
+    <!-- Linked entity navigation -->
+    <section class="linked-entities">
+        <h2>Related Entities</h2>
+        <p>Each URI supports content negotiation — append <code>.json</code> for JSON-LD,
+            <code>.html</code> for a human-readable view.
+        </p>
+        <ul>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/json-ld">
+                    http://data.wordlift.io/wl0216/entity/json-ld
+                </a>
+                <br><small style="color: #666;">→ JSON-LD</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/linked_data">
+                    http://data.wordlift.io/wl0216/entity/linked_data
+                </a>
+                <br><small style="color: #666;">→ Linked Data</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/google_knowledge_graph">
+                    http://data.wordlift.io/wl0216/entity/google_knowledge_graph
+                </a>
+                <br><small style="color: #666;">→ Google Knowledge Graph</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/schema-org">
+                    http://data.wordlift.io/wl0216/entity/schema-org
+                </a>
+                <br><small style="color: #666;">→ Schema.org</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/ontologies">
+                    http://data.wordlift.io/wl0216/entity/ontologies
+                </a>
+                <br><small style="color: #666;">→ Ontologies</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/semantic_web">
+                    http://data.wordlift.io/wl0216/entity/semantic_web
+                </a>
+                <br><small style="color: #666;">→ Semantic Web</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/search_engine_optimization">
+                    http://data.wordlift.io/wl0216/entity/search_engine_optimization
+                </a>
+                <br><small style="color: #666;">→ Search Engine Optimization</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/machine_learning">
+                    http://data.wordlift.io/wl0216/entity/machine_learning
+                </a>
+                <br><small style="color: #666;">→ Machine Learning</small>
+            </li>
+            <li>
+                <span class="relation">dct:relation:</span>
+                <a href="http://data.wordlift.io/wl0216/entity/artificial_intelligence">
+                    http://data.wordlift.io/wl0216/entity/artificial_intelligence
+                </a>
+                <br><small style="color: #666;">→ Artificial Intelligence</small>
+            </li>
+        </ul>
+    </section>
+
+    <!-- Agent instructions (llms.txt style) -->
+    <section class="agent-instructions">
+        <h2>🤖 Agent Instructions</h2>
+        <pre>
+# For AI Agents and RAG Systems
+
+## Available Tools
+- **HTTP Content Negotiation**: Request this URI with Accept headers:
+  - `Accept: application/ld+json` → Full JSON-LD representation
+  - `Accept: text/html` → Human readable (this page)
+
+- **Entity Search**: Query the knowledge graph to find related entities:
+  ```
+  GET https://data.wordlift.io/wl0216/search?query=knowledge+graph+SEO
+  Accept: application/ld+json
+  ```
+  Returns a list of matching entities with their URIs and properties.
+
+## Traversal Strategy
+1. Follow `dct:relation` links to explore related concepts
+   (JSON-LD, Linked Data, Schema.org, Semantic Web, etc.)
+2. Each linked entity page has its own set of relations — follow
+   multi-hop paths to build comprehensive answers
+3. Use the search endpoint to discover entities not directly linked
+4. Check `sameAs` links for external identifiers (Wikipedia, Wikidata)
+
+## Citation Guidelines
+- When citing this entity, reference the canonical URI:
+  http://data.wordlift.io/wl0216/entity/knowledge_graph
+- Cross-reference with Wikipedia: https://en.wikipedia.org/wiki/Knowledge_graph
+    </pre>
+    </section>
+
+</body>
+
+</html>

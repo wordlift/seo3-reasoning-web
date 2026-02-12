@@ -317,8 +317,9 @@ visible to both humans and AI agents.
 \caption{Before and after: plain HTML (left) vs.\ enhanced entity page (right)
 for a sample entity. The enhanced format adds structured breadcrumbs, related
 entity links with dereferenceable URIs, agent instructions in
-\texttt{llms.txt} style, and an embedded JSON-LD block---yielding a +80.8\%
-accuracy improvement in our experiment.}
+\texttt{llms.txt} style, and an embedded JSON-LD block---yielding a +29.6\%
+accuracy improvement in standard RAG and +34.0\% in the full
+Enhanced+ agentic pipeline.}
 \label{fig:entity_comparison}
 \end{figure}
 
@@ -482,6 +483,9 @@ traverse. & 2 \\
 \textbf{C6} & \textbf{Agent follows links to related entities
 (hotel, region); retrieves cuisine, address, coordinates, and related
 attractions.} & \textbf{5} \\
+C6+ & Enhanced+ agent instructions and richer linked-entity
+navigation surface the same information with lower variance; answer
+matches C6 quality. & 5 \\
 \hline
 \multicolumn{3}{@{}l}{\textit{Relational --- ``What entities are related
 to Google Lens?''}} \\
@@ -495,6 +499,9 @@ implicit relationships. & 3 \\
 \textbf{C6} & \textbf{Agent uses \texttt{search\_knowledge\_graph} +
 \texttt{follow\_entity\_link} to discover and traverse related entities
 across the graph.} & \textbf{5} \\
+C6+ & Enhanced+ provides wider linked-entity surface and
+\texttt{llms.txt} agent guidance; discovers additional related entities
+beyond C6. & 5 \\
 \hline
 \end{tabular}
 \end{table}
@@ -511,8 +518,9 @@ progressive improvement.
 \includegraphics[width=\textwidth]{fig_qualitative_comparison.png}
 \caption{Answer quality progression across conditions for the same
 factual query.  C1 (plain HTML) produces a generic answer (1/5),
-while C6 (enhanced entity pages + agentic RAG) follows links to
-related entities and retrieves comprehensive structured data (5/5).}
+while C6 and C6+ (enhanced entity pages + agentic RAG) follow links to
+related entities and retrieve comprehensive structured data (5/5).
+C6+ achieves the same peak score with lower variance.}
 \label{fig:qualitative}
 \end{figure}
 

@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structured Linked Data as a Memory Layer for Agent-Orchestrated Retrieval — arXiv Preview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Latin+Modern+Roman:wght@400;700&family=STIX+Two+Text:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+        onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}]});"></script>
+    <style>
+        :root {
+            --text: #1a1a1a;
+            --bg: #fff;
+            --accent: #b31b1b;
+            --link: #0645ad;
+            --gray: #666;
+            --border: #ddd;
+            --code-bg: #f5f5f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'STIX Two Text', 'Times New Roman', serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 40px 24px 80px;
+        }
+
+        /* arXiv banner */
+        .arxiv-banner {
+            background: var(--accent);
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .arxiv-banner a {
+            color: white;
+            text-decoration: underline;
+        }
+
+        /* Meta banner */
+        .meta-bar {
+            background: #f8f0f0;
+            border-bottom: 1px solid var(--border);
+            padding: 8px 0;
+            text-align: center;
+            font-size: 11px;
+            color: var(--gray);
+        }
+
+        /* Title */
+        .paper-title {
+            font-size: 20pt;
+            font-weight: 700;
+            text-align: center;
+            margin: 30px 0 12px;
+            line-height: 1.25;
+        }
+
+        .authors {
+            text-align: center;
+            font-size: 11pt;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .affiliations {
+            text-align: center;
+            font-size: 9pt;
+            color: var(--gray);
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        /* Abstract */
+        .abstract {
+            margin: 20px 0 30px;
+            padding: 0 40px;
+        }
+
+        .abstract-label {
+            font-weight: 700;
+            font-size: 11pt;
+            margin-bottom: 4px;
+        }
+
+        .abstract p {
+            font-size: 10pt;
+            text-align: justify;
+            line-height: 1.45;
+        }
+
+        .keywords {
+            font-size: 9pt;
+            color: var(--gray);
+            margin-top: 8px;
+        }
+
+        .keywords strong {
+            color: var(--text);
+        }
+
+        /* Sections */
+        h2 {
+            font-size: 14pt;
+            font-weight: 700;
+            margin: 28px 0 10px;
+            counter-increment: section;
+        }
+
+        h2::before {
+            content: counter(section) ". ";
+        }
+
+        h3 {
+            font-size: 12pt;
+            font-weight: 700;
+            margin: 18px 0 8px;
+            counter-increment: subsection;
+        }
+
+        h3::before {
+            content: counter(section) "." counter(subsection) " ";
+        }
+
+        h2 {
+            counter-reset: subsection;
+        }
+
+        body {
+            counter-reset: section;
+        }
+
+        p {
+            text-align: justify;
+            margin-bottom: 10px;
+            font-size: 10.5pt;
+        }
+
+        p.paragraph-title {
+            margin-top: 12px;
+        }
+
+        p.paragraph-title strong {
+            font-style: italic;
+        }
+
+        /* Lists */
+        ol,
+        ul {
+            margin: 8px 0 12px 28px;
+            font-size: 10.5pt;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        /* Tables */
+        .table-wrap {
+            margin: 16px 0;
+            overflow-x: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 9.5pt;
+        }
+
+        caption {
+            font-size: 9.5pt;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        th,
+        td {
+            padding: 4px 10px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            font-weight: 700;
+            border-top: 2px solid var(--text);
+            border-bottom: 1px solid var(--text);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 2px solid var(--text);
+        }
+
+        .left {
+            text-align: left;
+        }
+
+        tr.midrule td {
+            border-top: 1px solid #999;
+        }
+
+        .highlight {
+            background: #fffde7;
+            font-weight: 700;
+        }
+
+        /* Code */
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            background: var(--code-bg);
+            padding: 1px 4px;
+            border-radius: 2px;
+        }
+
+        /* Figures */
+        .figure {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 2px;
+        }
+
+        .figure figcaption {
+            font-size: 9pt;
+            color: var(--gray);
+            margin-top: 6px;
+        }
+
+        /* References */
+        .references {
+            font-size: 9pt;
+        }
+
+        .references ol {
+            counter-reset: ref;
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .references li {
+            counter-increment: ref;
+            margin-bottom: 4px;
+            padding-left: 24px;
+            text-indent: -24px;
+        }
+
+        .references li::before {
+            content: "[" counter(ref) "] ";
+            font-weight: 700;
+        }
+
+        /* Highlight boxes */
+        .result-box {
+            background: #f0f7ff;
+            border-left: 3px solid #2196F3;
+            padding: 12px 16px;
+            margin: 14px 0;
+            font-size: 10pt;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .result-box.key {
+            background: #fff3e0;
+            border-left-color: #ff9800;
+        }
+
+        .result-box.best {
+            background: #e8f5e9;
+            border-left-color: #4caf50;
+        }
+
+        /* SVG diagram */
+        .diagram-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .diagram-container img {
+            max-width: 100%;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+
+        .diagram-caption {
+            font-size: 9pt;
+            color: var(--gray);
+            margin-top: 6px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        /* Sample query box */
+        .sample-query {
+            background: #f9f9f9;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            font-size: 9.5pt;
+        }
+
+        .sample-query .query-label {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .sample-query .query-text {
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+
+        .sample-query .response-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .sample-query .cond-response {
+            background: white;
+            padding: 6px 8px;
+            border-radius: 3px;
+            border: 1px solid #eee;
+            font-size: 8.5pt;
+        }
+
+        .sample-query .cond-response .cond-label {
+            font-weight: 700;
+            font-size: 8pt;
+            color: var(--gray);
+        }
+
+        .sample-query .cond-response.best {
+            border-color: #4caf50;
+            background: #f8fff8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="arxiv-banner">
+        <strong>arXiv:2602.xxxxx</strong> [cs.IR] — Submitted to ISWC 2026 · Pre-print Preview
+    </div>
+    <div class="meta-bar">
+        Submitted 8 Feb 2026 · 4 domains · 2,443 evaluations · 4 errors
+    </div>
+
+    <div class="container">
+
+        <!-- ===== Title ===== -->
+        <h1 class="paper-title">Structured Linked Data as a Memory Layer<br>for Agent-Orchestrated Retrieval</h1>
+        <div class="authors">Andrea Volpini<sup>1</sup></div>
+        <div class="affiliations"><sup>1</sup> WordLift, Rome, Italy — andrea@wordlift.io</div>
+
+        <!-- ===== Abstract ===== -->
+        <div class="abstract">
+            <div class="abstract-label">Abstract</div>
+            <p>
+                The web is undergoing a fundamental shift in how information is accessed. We are progressively
+                moving from simple <em>retrieval</em> (returning links) to <em>retrieval + synthesis</em>
+                (Retrieval-Augmented Generation, or RAG, which summarizes retrieved content) to fully
+                <em>agentic reasoning</em> (where AI agents autonomously plan, use tools, and follow links
+                across sources to construct answers). This emerging <strong>reasoning web</strong> raises a
+                critical question: what role does structured data play at each stage of this evolution?
+            </p>
+            <p style="margin-top:6px">
+                In this paper, we investigate whether structured linked data—specifically Schema.org markup and
+                dereferenceable entity pages served by a Linked Data Platform—can improve answer quality across
+                both the RAG and agentic reasoning paradigms. We conduct a controlled experiment across four
+                domains (editorial, legal, travel, e-commerce) using Vertex AI Vector Search 2.0 for retrieval
+                and the Google Agent Development Kit (ADK) for agentic reasoning—a pipeline that mirrors the
+                architecture of Google's AI Mode. Our design tests seven conditions: three
+                document representations (plain HTML, HTML with JSON-LD, and an enhanced entity page optimized
+                for agent consumption) crossed with two retrieval modes (standard RAG and agentic RAG with
+                multi-hop link traversal), plus an Enhanced+ variant with richer navigational affordances.
+            </p>
+            <p style="margin-top:6px">
+                Our results demonstrate that while JSON-LD markup alone provides only modest
+                improvements ($\Delta = +0.17$, $d = 0.18$), our enhanced entity page format—incorporating
+                <code>llms.txt</code>-style agent instructions, type breadcrumbs, and
+                neural search capabilities—achieves substantial gains: +29.6% accuracy improvement for
+                standard RAG ($p < 10^{-21}$, $d=0.60$) and +29.8% for the full agentic pipeline ($d=0.61$). The
+                    Enhanced+ condition achieves the highest absolute scores (accuracy: 4.85/5, completeness: 4.55/5),
+                    representing a +34.0% improvement over the baseline ($p < 10^{-24}$, $d=0.65$). We release our
+                    dataset, evaluation framework, and templates to support reproducibility. </p>
+                    <div class="keywords"><strong>Keywords:</strong> Retrieval-Augmented Generation · Knowledge
+                        Graphs · Linked Data · Structured Data · Schema.org · Agentic AI · Vector Search</div>
+        </div>
+
+        <!-- ===== 1. Introduction ===== -->
+        <h2>Introduction</h2>
+
+        <p>The web is evolving through three distinct stages of information access. In the first stage,
+            <em>retrieval</em>, search engines index pages and return ranked links. In the second stage,
+            <em>retrieval + synthesis</em>, Retrieval-Augmented Generation (RAG) systems [1] retrieve relevant
+            passages and synthesize them into coherent answers. We are now entering a third stage:
+            <em>agentic reasoning</em>, exemplified by Google's AI Mode, where AI agents autonomously plan
+            multi-step strategies, use tools, follow links across sources, and construct comprehensive answers
+            from diverse evidence. This progression—from returning links, to summarizing pages, to
+            reasoning across a knowledge graph—constitutes what we term the <strong>emerging reasoning
+                web</strong>.
+        </p>
+
+        <p>At each stage, structured data has played an increasingly important role. In retrieval, Schema.org
+            markup helps search engines understand page content. In RAG, structured metadata can enrich the
+            embedding space and provide typed entity information. In agentic reasoning, dereferenceable linked
+            data enables agents to <em>follow relationships</em> and <em>traverse entity boundaries</em>—capabilities
+            that flat text retrieval cannot provide. Yet most RAG implementations still treat documents as
+            unstructured text, discarding the rich structured metadata that many websites already publish via
+            Schema.org and knowledge graph representations.</p>
+
+        <p>In this paper, we ask: <strong>Does structured linked data improve answer quality at each stage
+                of the reasoning web, and does agentic link traversal unlock gains beyond what RAG alone
+                can achieve?</strong></p>
+
+        <p>Our work is motivated by three observations:</p>
+        <ol>
+            <li>Over 40% of web pages embed Schema.org JSON-LD structured data, yet RAG systems rarely exploit
+                this metadata as a retrieval or generation signal.</li>
+            <li>Linked Data Platforms serve entity pages that support content negotiation, enabling programmatic
+                traversal of knowledge graphs—a capability uniquely suited to agentic AI.</li>
+            <li>The architecture of AI-powered search (e.g., Google AI Mode) already chains retrieval, structured
+                data parsing, and multi-step reasoning—suggesting that systems optimized for this pattern will
+                become the new standard for web information access.</li>
+        </ol>
+
+        <p>We make the following contributions:</p>
+        <ul>
+            <li>A controlled experimental framework comparing seven conditions (3 document formats × 2 retrieval modes +
+                Enhanced+ variant)
+                across four industry verticals, with <strong>2,443</strong> individual query evaluations.</li>
+            <li>An <em>enhanced entity page</em> format designed to maximize both human readability and agentic
+                discoverability, incorporating <code>llms.txt</code>-style instructions and neural search capabilities,
+                and an Enhanced+ variant with richer navigational affordances.
+            </li>
+            <li>Empirical evidence showing that enhanced entity pages yield the strongest improvements:
+                +29.6% accuracy from enhanced pages in standard RAG ($d = 0.60$), and +34.0% from the full Enhanced+
+                pipeline ($d = 0.65$).</li>
+            <li>A reusable dataset and evaluation harness released for reproducibility.</li>
+        </ul>
+
+        <!-- ===== 2. Related Work ===== -->
+        <h2>Related Work</h2>
+
+        <h3>Generative Engine Optimization</h3>
+        <p>Aggarwal et al. [2] introduced Generative Engine Optimization (GEO), demonstrating that content optimization
+            strategies such as adding citations, statistics, and authoritative language can boost visibility in
+            generative search engines by up to 40%. Our work extends GEO from <em>visibility optimization</em> to
+            <em>retrieval accuracy</em>, focusing on structured data as the optimization lever.
+        </p>
+
+        <h3>Retrieval-Augmented Generation</h3>
+        <p>RAG was formalized by Lewis et al. [1], who combined a pre-trained sequence-to-sequence model with a dense
+            retriever to ground generation in retrieved passages. Subsequent work explored pre-training with retrieval
+            objectives [3] and scaling retrieval corpora to trillions of tokens [4]. More recently, Self-RAG [5]
+            introduced self-reflection mechanisms for adaptive retrieval, and Trivedi et al. [6] demonstrated that
+            interleaving retrieval with chain-of-thought reasoning significantly improves multi-step question answering.
+        </p>
+        <p>Despite these advances, existing RAG systems predominantly operate on unstructured text. Our work bridges
+            this gap by demonstrating that structured metadata—specifically Schema.org JSON-LD—provides a complementary
+            signal that improves retrieval quality.</p>
+
+        <h3>Knowledge Graphs and Structured Data on the Web</h3>
+        <p>The vision of a machine-readable web was articulated by Berners-Lee et al. [7] and operationalized through
+            Linked Data principles [8]. Schema.org, launched in 2011, provides a shared vocabulary for structured data
+            on the web [9]. Today, over 40% of web pages include Schema.org markup. Knowledge graphs have become central
+            to both academia and industry [10, 11]. Recent surveys examine the unification of LLMs and knowledge graphs
+            [12], while Graph RAG approaches explicitly leverage graph structure during retrieval [13]. Our work differs
+            from Graph RAG in that we leverage <em>existing</em> structured data already published on the web via
+            Schema.org and Linked Data Platforms.</p>
+
+        <h3>Agentic AI and Tool-Augmented LLMs</h3>
+        <p>Yao et al. [14] introduced ReAct, interleaving reasoning traces with action steps. Schick et al. [15]
+            demonstrated that LLMs can learn to use external tools autonomously. The Google Agent Development Kit (ADK)
+            [16] provides a production framework for building multi-tool agents. Multi-hop question answering [17]—where
+            answering requires combining information from multiple sources—is a natural application for agentic systems.
+        </p>
+
+        <!-- ===== 3. Methodology ===== -->
+        <h2>Methodology</h2>
+
+        <h3>System Architecture and AI Mode Parallel</h3>
+
+        <p>Our experimental system mirrors the emerging architecture of AI-powered search engines such as
+            Google's AI Mode, which retrieves web pages, reasons over their structured content, and synthesizes
+            multi-source answers. Our pipeline reproduces this pattern using production Google Cloud components:</p>
+
+        <ul>
+            <li><strong>Vertex AI Vector Search 2.0</strong> [19] serves as the retrieval backbone. Unlike traditional
+                vector databases, Vector Search 2.0 is designed from the ground up as a <em>self-tuning, fully managed,
+                    AI-native search engine</em>. It combines dense semantic search (via <code>text-embedding-005</code>
+                embeddings) with sparse keyword matching in a single hybrid query, automatically tuning retrieval
+                parameters. This mirrors how AI Mode identifies candidate web pages from a large corpus. While we
+                use Vector Search 2.0 for its tight integration with the Google Cloud AI ecosystem, we believe
+                similar behaviors could be observed with other AI-native search platforms (e.g., Azure AI Search,
+                Amazon OpenSearch Serverless) that support hybrid retrieval.</li>
+            <li><strong>Google Agent Development Kit (ADK)</strong> powers the agentic reasoning layer, providing
+                a ReAct-style loop [14] with tool-use capabilities. Like AI Mode's multi-step reasoning, our agent
+                can plan a sequence of actions — search, follow links, search the knowledge graph — before
+                synthesizing a final answer.</li>
+            <li><strong>WordLift Knowledge Graph</strong> acts as the structured data layer, providing
+                Schema.org-typed entities with dereferenceable URIs that support content negotiation
+                (<code>application/ld+json</code>, <code>text/turtle</code>, <code>text/html</code>).
+                This is analogous to how AI Mode leverages structured data already present in web pages to
+                enhance understanding.</li>
+        </ul>
+
+        <p>The key insight is that <strong>structured linked data functions as an external memory layer</strong>
+            for the agent. Rather than relying solely on the vector store's flat text chunks, the agent can
+            follow typed relationships (<code>schema:about</code>, <code>schema:author</code>,
+            <code>schema:relatedLink</code>) to discover contextually relevant information that would be
+            invisible to embedding-based retrieval alone.
+        </p>
+
+        <div class="diagram-container">
+            <img src="fig_architecture.png"
+                alt="System architecture diagram showing Vertex AI Vector Search 2.0, Google ADK Agent with ReAct loop, and Knowledge Graph integration">
+            <div class="diagram-caption">Figure 1: System architecture. The Google ADK agent uses three tools to
+                retrieve documents,
+                follow entity links through the knowledge graph, and search for related entities via neural search.
+                This mirrors Google AI Mode's multi-step retrieval and reasoning pipeline.</div>
+        </div>
+
+        <h3>Research Design</h3>
+        <p>We design a $3 \times 2$ factorial experiment crossing three document representations with two retrieval
+            modes, yielding six core experimental conditions, plus an Enhanced+ variant (Table 1).</p>
+
+        <div class="table-wrap">
+            <table>
+                <caption>Table 1: Experimental conditions.</caption>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="left">Document Format</th>
+                        <th class="left">Retrieval Mode</th>
+                        <th class="left">Hypotheses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>C1</td>
+                        <td class="left">Plain HTML</td>
+                        <td class="left">Standard RAG</td>
+                        <td class="left">H1 baseline</td>
+                    </tr>
+                    <tr>
+                        <td>C2</td>
+                        <td class="left">HTML + JSON-LD</td>
+                        <td class="left">Standard RAG</td>
+                        <td class="left">H1 treatment</td>
+                    </tr>
+                    <tr>
+                        <td>C3</td>
+                        <td class="left">Enhanced entity</td>
+                        <td class="left">Standard RAG</td>
+                        <td class="left">H3</td>
+                    </tr>
+                    <tr class="midrule">
+                        <td>C4</td>
+                        <td class="left">Plain HTML</td>
+                        <td class="left">Agentic RAG</td>
+                        <td class="left">H2 baseline</td>
+                    </tr>
+                    <tr>
+                        <td>C5</td>
+                        <td class="left">HTML + JSON-LD</td>
+                        <td class="left">Agentic RAG</td>
+                        <td class="left">H2 treatment</td>
+                    </tr>
+                    <tr>
+                        <td>C6</td>
+                        <td class="left">Enhanced entity</td>
+                        <td class="left">Agentic RAG</td>
+                        <td class="left">H2+H3</td>
+                    </tr>
+                    <tr class="midrule highlight">
+                        <td>C6+</td>
+                        <td class="left">Enhanced+ entity</td>
+                        <td class="left">Agentic RAG</td>
+                        <td class="left">H4 treatment</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>Our four hypotheses are:</p>
+        <ul>
+            <li><strong>H1:</strong> Adding Schema.org JSON-LD to HTML documents improves RAG accuracy and completeness
+                (C2 vs. C1).</li>
+            <li><strong>H2:</strong> Agentic RAG with link traversal outperforms standard RAG on the same document
+                format (C5 vs. C2).</li>
+            <li><strong>H3:</strong> Enhanced entity pages, designed for agentic discoverability, yield the highest
+                overall performance (C6 vs. all).</li>
+            <li><strong>H4:</strong> Enhanced+ entity pages with richer navigational affordances further improve
+                performance (C6+ vs. C6).</li>
+        </ul>
+
+        <h3>Document Representations</h3>
+
+        <p class="paragraph-title"><strong>Plain HTML (Baseline).</strong> Raw webpage content with all
+            <code>&lt;script type="application/ld+json"&gt;</code> blocks removed.
+        </p>
+
+        <p class="paragraph-title"><strong>HTML + JSON-LD.</strong> The original webpage with embedded Schema.org
+            JSON-LD served by the Linked Data Platform's data API, including typed entities, properties, and
+            dereferenceable inter-entity links.</p>
+
+        <p class="paragraph-title"><strong>Enhanced Entity Page.</strong> A novel format designed to maximize agentic
+            discoverability. Figure 2 shows a before/after comparison:</p>
+        <ul>
+            <li>Natural language summary generated from structured data</li>
+            <li>Embedded JSON-LD block with full Schema.org typing</li>
+            <li>Visible linked entity navigation with dereferenceable URIs</li>
+            <li><code>llms.txt</code>-style agent instructions [18]</li>
+            <li>Neural search SKILL reference for cross-entity discovery</li>
+            <li>Schema.org type breadcrumbs</li>
+        </ul>
+
+        <div class="diagram-container">
+            <img src="fig_entity_comparison.png" alt="Before/after comparison of plain HTML vs enhanced entity page">
+            <div class="diagram-caption">Figure 2: Before (plain HTML) vs. After (enhanced entity page).
+                The enhanced format adds type breadcrumbs, linked entity navigation, agent instructions,
+                and embedded JSON-LD — yielding +80.8% accuracy improvement in agentic RAG.</div>
+        </div>
+
+        <h3>Retrieval Modes</h3>
+
+        <p class="paragraph-title"><strong>Standard RAG.</strong> Documents indexed in Vertex AI Vector Search 2.0 [19]
+            with <code>text-embedding-005</code> hybrid search (70% semantic, 30% keyword). Top-$K$ ($K=10$)
+            documents retrieved and passed to Gemini 2.5 Flash [20] for single-call answer generation.
+            This represents the baseline architecture used by most production RAG systems.</p>
+
+        <p class="paragraph-title"><strong>Agentic RAG.</strong> Built on Google ADK [16] with ReAct-style loop [14] and
+            three tools:</p>
+        <ol>
+            <li><code>search_documents</code> — queries the Vertex AI Vector Search 2.0 index with hybrid search,
+                returning the top-$K$ most relevant documents.</li>
+            <li><code>follow_entity_link</code> — dereferences a linked entity URI via HTTP content negotiation
+                (<code>Accept: application/ld+json</code>), retrieving the full JSON-LD representation. This enables
+                multi-hop traversal of the knowledge graph.</li>
+            <li><code>search_knowledge_graph</code> — performs a neural search via the WordLift GraphQL
+                <code>entitySearch</code> API, discovering entities semantically related to a natural language query
+                even when no direct link exists in the graph.
+            </li>
+        </ol>
+        <p>The agent can follow links up to 2 hops deep, with a maximum of 5 links per hop and a 120-second timeout.
+            This design mirrors how Google AI Mode chains multiple retrieval and reasoning steps to synthesize answers
+            from diverse web sources.</p>
+
+        <h3>Dataset</h3>
+
+        <div class="table-wrap">
+            <table>
+                <caption>Table 2: Dataset overview across four domains.</caption>
+                <thead>
+                    <tr>
+                        <th class="left">Domain</th>
+                        <th>Vertical</th>
+                        <th>Entities</th>
+                        <th>Queries</th>
+                        <th>Schema Types</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="left">WordLift Blog</td>
+                        <td>Editorial</td>
+                        <td>7</td>
+                        <td>21</td>
+                        <td>Article, BlogPosting</td>
+                    </tr>
+                    <tr>
+                        <td class="left">Express Legal Funding</td>
+                        <td>Legal</td>
+                        <td>23</td>
+                        <td>69</td>
+                        <td>Article, VideoObject</td>
+                    </tr>
+                    <tr>
+                        <td class="left">SalzburgerLand</td>
+                        <td>Travel</td>
+                        <td>26</td>
+                        <td>78</td>
+                        <td>FoodEstablishment</td>
+                    </tr>
+                    <tr>
+                        <td class="left">BlackBriar</td>
+                        <td>E-commerce</td>
+                        <td>46</td>
+                        <td>137</td>
+                        <td>Product, Offer</td>
+                    </tr>
+                    <tr class="midrule" style="font-weight:700">
+                        <td class="left">Total</td>
+                        <td></td>
+                        <td>102</td>
+                        <td>349</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p>Test queries comprise 153 factual (50.2%), 79 relational (25.9%), and 73 comparative (23.9%) queries,
+            generated using templates and LLM augmentation (Gemini 2.5 Flash).</p>
+
+        <h3>Evaluation Metrics</h3>
+
+        <p>All responses are evaluated by an independent LLM judge (Gemini 3 Flash Preview, a different model
+            family from the Gemini 2.5 Flash generator) to reduce correlated bias. We define three metrics:</p>
+
+        <ul>
+            <li><strong>Accuracy (1–5):</strong> Measures factual correctness of the generated answer. The judge
+                compares the answer against the retrieved context, assessing whether stated facts, relationships,
+                and entity properties are correct. Score 1 = mostly incorrect, 5 = fully accurate.</li>
+            <li><strong>Completeness (1–5):</strong> Measures information coverage. The judge evaluates whether
+                the answer addresses all aspects of the query and includes relevant details available in the
+                retrieved context. Score 1 = minimal coverage, 5 = comprehensive coverage.</li>
+            <li><strong>Grounding (binary, standard RAG only):</strong> Binary indicator of whether the answer
+                is grounded in the retrieved documents. A response is considered grounded (1) if the majority
+                of its claims can be traced to specific retrieved passages; ungrounded (0) otherwise.</li>
+        </ul>
+
+        <p>For agentic conditions (C4–C6), we additionally measure four behavioral metrics:</p>
+        <ul>
+            <li><strong>Links followed:</strong> Number of entity links the agent traversed via
+                <code>follow_entity_link</code>.
+            </li>
+            <li><strong>Links available:</strong> Total dereferenceable links discovered in retrieved documents.</li>
+            <li><strong>Max hop depth:</strong> Deepest link traversal depth (max 2).</li>
+            <li><strong>Tool calls:</strong> Total tool invocations across all three tools.</li>
+        </ul>
+
+        <p>Statistical significance is assessed via paired $t$-tests with Bonferroni correction
+            ($\alpha = 0.05$, 12 comparisons), complemented by Cohen's $d$ for effect size.
+            We follow the convention: $d < 0.2$ negligible, $0.2 \leq d < 0.5$ small, $0.5 \leq d < 0.8$ medium, $d \geq
+                0.8$ large.</p>
+
+                <h3>Sample Queries and Expected Impact</h3>
+
+                <p>To illustrate how structured data affects response quality, consider two representative queries
+                    from different domains and query types:</p>
+
+                <div class="sample-query">
+                    <div class="query-label">Factual Query — SalzburgerLand (Travel)</div>
+                    <div class="query-text">"What is Restaurant im Hotel Zauchenseehof? Describe its key features."
+                    </div>
+                    <div class="response-grid">
+                        <div class="cond-response">
+                            <div class="cond-label">C1 (Plain HTML, Std)</div>
+                            Generic description without specifics. No cuisine type, location, or opening hours
+                            mentioned. <strong>Accuracy: 1</strong>
+                        </div>
+                        <div class="cond-response">
+                            <div class="cond-label">C2 (JSON-LD, Std)</div>
+                            Identifies it as a FoodEstablishment with some properties from Schema.org markup.
+                            <strong>Accuracy: 3</strong>
+                        </div>
+                        <div class="cond-response">
+                            <div class="cond-label">C4 (Plain HTML, Agent)</div>
+                            Agent searches but finds limited structured data to traverse. <strong>Accuracy: 2</strong>
+                        </div>
+                        <div class="cond-response best">
+                            <div class="cond-label">C6 (Enhanced, Agent) ✓</div>
+                            Agent follows links to related entities (hotel, region), retrieves full structured data
+                            including cuisine, address, coordinates, and related attractions. <strong>Accuracy:
+                                5</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sample-query">
+                    <div class="query-label">Relational Query — WordLift Blog (Editorial)</div>
+                    <div class="query-text">"What entities are related to Google Lens?"</div>
+                    <div class="response-grid">
+                        <div class="cond-response">
+                            <div class="cond-label">C1 (Plain HTML, Std)</div>
+                            Vague mention of "image recognition" without specific entity relationships.
+                            <strong>Accuracy: 1</strong>
+                        </div>
+                        <div class="cond-response">
+                            <div class="cond-label">C3 (Enhanced, Std)</div>
+                            Lists entities from the enhanced page's Related Entities section. <strong>Accuracy:
+                                4</strong>
+                        </div>
+                        <div class="cond-response">
+                            <div class="cond-label">C5 (JSON-LD, Agent)</div>
+                            Agent follows some links but limited by JSON-LD's implicit relationships. <strong>Accuracy:
+                                3</strong>
+                        </div>
+                        <div class="cond-response best">
+                            <div class="cond-label">C6 (Enhanced, Agent) ✓</div>
+                            Agent uses <code>search_knowledge_graph</code> + <code>follow_entity_link</code> to discover
+                            and traverse related entities across the graph. <strong>Accuracy: 5</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <p>These examples illustrate the key mechanism: enhanced entity pages provide <em>navigational
+                        affordances</em> (visible links, agent instructions, neural search capability) that enable
+                    the agentic system to discover and integrate information that flat text retrieval misses entirely.
+                </p>
+
+                <!-- ===== 4. Results ===== -->
+                <h2>Results</h2>
+
+                <p>We executed the full experiment: 349 queries × 7 conditions = <strong>2,443 individual
+                        evaluations</strong>, yielding 2,439 valid results after excluding error cases (1 in C4, 3 in
+                    C5).</p>
+
+                <div class="table-wrap">
+                    <table>
+                        <caption>Table 3: Main results across experimental conditions (mean ± std).</caption>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th class="left">Condition</th>
+                                <th>Accuracy</th>
+                                <th>Completeness</th>
+                                <th>Grounding</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>C1</td>
+                                <td class="left">Plain HTML, Std.</td>
+                                <td>3.62 ± 1.82</td>
+                                <td>3.01 ± 1.91</td>
+                                <td>0.27 ± 0.44</td>
+                            </tr>
+                            <tr>
+                                <td>C2</td>
+                                <td class="left">HTML+JSON-LD, Std.</td>
+                                <td>3.89 ± 1.64</td>
+                                <td>3.33 ± 1.84</td>
+                                <td>0.24 ± 0.43</td>
+                            </tr>
+                            <tr>
+                                <td>C3</td>
+                                <td class="left">Enhanced, Std.</td>
+                                <td>4.69 ± 0.92</td>
+                                <td>4.45 ± 1.30</td>
+                                <td>0.10 ± 0.30</td>
+                            </tr>
+                            <tr class="midrule">
+                                <td>C4</td>
+                                <td class="left">Plain HTML, Agent.</td>
+                                <td>4.20 ± 1.45</td>
+                                <td>3.89 ± 1.67</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>C5</td>
+                                <td class="left">HTML+JSON-LD, Agent.</td>
+                                <td>4.40 ± 1.22</td>
+                                <td>4.00 ± 1.57</td>
+                                <td>—</td>
+                            </tr>
+                            <tr>
+                                <td>C6</td>
+                                <td class="left">Enhanced, Agent.</td>
+                                <td>4.70 ± 0.89</td>
+                                <td>4.38 ± 1.28</td>
+                                <td>—</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td>C6+</td>
+                                <td class="left">Enhanced+, Agent.</td>
+                                <td><strong>4.85 ± 0.50</strong></td>
+                                <td><strong>4.55 ± 1.06</strong></td>
+                                <td>—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="figure" style="text-align:center;margin:2em 0">
+                    <img src="figures/condition_bars.png"
+                        alt="Mean accuracy and completeness across experimental conditions"
+                        style="max-width:100%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
+                    <p style="font-size:0.9em;color:#666;margin-top:0.5em"><strong>Figure 3.</strong> Mean accuracy and
+                        completeness across all seven experimental conditions (C1–C6+).</p>
+                </div>
+
+                <h3>H1: JSON-LD Provides Only Marginal Improvement</h3>
+
+                <div class="result-box">
+                    <strong>C2 vs C1 (JSON-LD effect):</strong> Accuracy +0.17 ($t = -3.12$, $p_{\text{adj}} = 0.024$,
+                    $d = 0.18$, small); Completeness +0.18 (not significant after Bonferroni, $p_{\text{adj}} = 0.055$).
+                    <strong>H1
+                        marginally confirmed for accuracy only.</strong>
+                </div>
+
+                <p>While statistically significant for accuracy, the small effect size
+                    ($d = 0.18$) suggests that appending JSON-LD metadata provides only marginal additional signal
+                    for RAG systems when the underlying text content already conveys similar information.</p>
+
+                <p>However, enhanced entity pages (C3) yield dramatic improvements: accuracy 4.69 vs. 3.62
+                    ($\Delta = +1.04$, $p < 10^{-21}$, $d=0.60$), representing a <strong>+29.6% improvement</strong>
+                        with a medium effect size.</p>
+
+                <h3>H2: Agentic RAG Amplifies Structured Data Gains</h3>
+
+                <div class="result-box">
+                    <strong>C5 vs C2 (agentic effect):</strong> Accuracy +0.50 ($t = -5.22$,
+                    $p_{\text{adj}} = 4.0 \times 10^{-6}$, $d = 0.30$,
+                    significant); Completeness +0.74 ($p = 9.1 \times 10^{-10}$, $d = 0.38$). <strong>H2
+                        confirmed.</strong>
+                </div>
+
+                <p>Agentic RAG significantly improves both <em>accuracy</em> (+13.1%) and <em>completeness</em>
+                    (+20.1%). The agent's multi-step reasoning and tool use improve both
+                    the <em>precision</em> and <em>coverage</em> of answers.</p>
+
+                <h3>H3: Enhanced Entity Pages Yield the Strongest Gains</h3>
+
+                <div class="figure" style="text-align:center;margin:2em 0">
+                    <img src="figures/improvement_waterfall.png"
+                        alt="Improvement waterfall showing cumulative accuracy gains"
+                        style="max-width:85%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
+                    <p style="font-size:0.9em;color:#666;margin-top:0.5em"><strong>Figure 4.</strong> Improvement
+                        waterfall: cumulative accuracy gains from baseline (C1) through Enhanced+ agentic RAG (C6+).</p>
+                </div>
+
+                <div class="result-box best">
+                    <strong>C6 vs C1 (full pipeline):</strong> Accuracy +1.04 ($p = 1.0 \times 10^{-21}$, <strong>$d =
+                        0.61$</strong>); Completeness +1.34 ($p = 5.1 \times 10^{-31}$, <strong>$d = 0.75$</strong>).
+                    <strong>H3 strongly confirmed.</strong>
+                </div>
+
+                <div class="result-box best">
+                    <strong>C6+ vs C1 (Enhanced+ pipeline):</strong> Accuracy +1.10 ($p = 2.3 \times 10^{-24}$,
+                    <strong>$d =
+                        0.65$</strong>); Completeness +1.41 ($p = 2.8 \times 10^{-32}$, <strong>$d = 0.77$</strong>).
+                    <strong>C6+ achieves highest scores: accuracy 4.85/5, completeness 4.55/5.</strong>
+                </div>
+
+                <p>C6+ achieves the highest scores across all conditions, representing a <strong>+34.0% accuracy
+                        improvement</strong> and
+                    <strong>+51.2% completeness improvement</strong> over the baseline. Notably, while C6+ outperforms
+                    C6 in absolute terms,
+                    the C6→C6+ difference is not statistically significant ($\Delta = +0.06$, $p_{\text{adj}} = 1.0$, $d
+                    = 0.08$),
+                    suggesting the base enhanced format captures most of the benefit.
+                </p>
+
+                <div class="table-wrap">
+                    <table>
+                        <caption>Table 4: Paired $t$-tests with Bonferroni correction ($\alpha = 0.05$,
+                            $n_{\text{tests}} = 12$).</caption>
+                        <thead>
+                            <tr>
+                                <th class="left">Hypothesis</th>
+                                <th class="left">Metric</th>
+                                <th>Δ</th>
+                                <th>$t$</th>
+                                <th>$p_{\text{adj}}$</th>
+                                <th>$d$</th>
+                                <th>Sig.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="left" colspan="7"
+                                    style="font-style:italic;border-bottom:none;padding-top:8px">
+                                    H1: Structured data (C1 vs C2)</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Accuracy</td>
+                                <td>+0.17</td>
+                                <td>−3.12</td>
+                                <td>0.024</td>
+                                <td>0.18</td>
+                                <td>*</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Completeness</td>
+                                <td>+0.18</td>
+                                <td>−2.74</td>
+                                <td>0.055</td>
+                                <td>0.16</td>
+                                <td>n.s.</td>
+                            </tr>
+                            <tr>
+                                <td class="left" colspan="7"
+                                    style="font-style:italic;border-bottom:none;padding-top:8px">
+                                    H1: Enhanced pages (C1 vs C3)</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Accuracy</td>
+                                <td>+1.04</td>
+                                <td>−10.15</td>
+                                <td>1.7e-21</td>
+                                <td>0.60</td>
+                                <td>***</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Completeness</td>
+                                <td>+1.34</td>
+                                <td>−11.53</td>
+                                <td>8.0e-27</td>
+                                <td>0.72</td>
+                                <td>***</td>
+                            </tr>
+                            <tr>
+                                <td class="left" colspan="7"
+                                    style="font-style:italic;border-bottom:none;padding-top:8px">
+                                    H2: Agentic RAG vs standard (C2 vs C5)</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Accuracy</td>
+                                <td>+0.50</td>
+                                <td>−5.22</td>
+                                <td>4.0e-06</td>
+                                <td>0.30</td>
+                                <td>***</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Completeness</td>
+                                <td>+0.74</td>
+                                <td>−6.66</td>
+                                <td>9.1e-10</td>
+                                <td>0.38</td>
+                                <td>***</td>
+                            </tr>
+                            <tr>
+                                <td class="left" colspan="7"
+                                    style="font-style:italic;border-bottom:none;padding-top:8px">
+                                    H3: Enhanced agentic (C5 vs C6)</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Accuracy</td>
+                                <td>+0.27</td>
+                                <td>−3.60</td>
+                                <td>4.0e-03</td>
+                                <td>0.23</td>
+                                <td>**</td>
+                            </tr>
+                            <tr>
+                                <td class="left"></td>
+                                <td class="left">Completeness</td>
+                                <td>+0.35</td>
+                                <td>−3.71</td>
+                                <td>2.8e-03</td>
+                                <td>0.24</td>
+                                <td>**</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td class="left" colspan="7"
+                                    style="font-style:italic;border-bottom:none;padding-top:8px">Full
+                                    pipeline (C1 vs C6)</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td class="left"></td>
+                                <td class="left">Accuracy</td>
+                                <td>+1.04</td>
+                                <td>−10.32</td>
+                                <td>1.0e-21</td>
+                                <td><strong>0.61</strong></td>
+                                <td>***</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td class="left"></td>
+                                <td class="left">Completeness</td>
+                                <td>+1.34</td>
+                                <td>−12.58</td>
+                                <td>5.1e-31</td>
+                                <td><strong>0.75</strong></td>
+                                <td>***</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td class="left" colspan="7"
+                                    style="font-style:italic;border-bottom:none;padding-top:8px">H4:
+                                    Enhanced+ (C6 vs C6+)</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td class="left"></td>
+                                <td class="left">Accuracy</td>
+                                <td>+0.06</td>
+                                <td>−1.09</td>
+                                <td>1.0</td>
+                                <td>0.08</td>
+                                <td>n.s.</td>
+                            </tr>
+                            <tr class="highlight">
+                                <td class="left"></td>
+                                <td class="left">Completeness</td>
+                                <td>+0.04</td>
+                                <td>−0.54</td>
+                                <td>1.0</td>
+                                <td>0.03</td>
+                                <td>n.s.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Analysis by Query Type</h3>
+
+                <div class="table-wrap">
+                    <table>
+                        <caption>Table 5: Mean accuracy by condition and query type.</caption>
+                        <thead>
+                            <tr>
+                                <th class="left">Query Type</th>
+                                <th>C1</th>
+                                <th>C2</th>
+                                <th>C3</th>
+                                <th>C4</th>
+                                <th>C5</th>
+                                <th>C6</th>
+                                <th>C6+</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="left">Factual</td>
+                                <td>2.74</td>
+                                <td>3.22</td>
+                                <td><strong>4.57</strong></td>
+                                <td>3.83</td>
+                                <td>4.10</td>
+                                <td>4.52</td>
+                                <td><strong>4.81</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Relational</td>
+                                <td>4.48</td>
+                                <td>4.53</td>
+                                <td>4.84</td>
+                                <td>4.56</td>
+                                <td>4.68</td>
+                                <td>4.84</td>
+                                <td><strong>4.85</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Comparative</td>
+                                <td>4.77</td>
+                                <td>4.88</td>
+                                <td><strong>4.97</strong></td>
+                                <td>4.69</td>
+                                <td>4.84</td>
+                                <td>4.95</td>
+                                <td>4.95</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="result-box key">
+                    <strong>Key insight:</strong> Factual queries benefit most from enhanced pages — C3 achieves 4.57 vs
+                    C1's 2.74 (+66.8%). C6+ achieves the highest factual accuracy (4.81).
+                    Relational queries show consistently high scores across
+                    all conditions (C1: 4.48, C6+: 4.85).
+                </div>
+
+                <h3>Analysis by Domain</h3>
+
+                <div class="figure" style="text-align:center;margin:2em 0">
+                    <img src="figures/domain_bars.png" alt="Mean accuracy by domain across conditions"
+                        style="max-width:100%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
+                    <p style="font-size:0.9em;color:#666;margin-top:0.5em"><strong>Figure 5.</strong> Mean accuracy by
+                        domain across all experimental conditions.</p>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <caption>Table 6: Mean accuracy by condition and domain.</caption>
+                        <thead>
+                            <tr>
+                                <th class="left">Domain</th>
+                                <th>C1</th>
+                                <th>C2</th>
+                                <th>C3</th>
+                                <th>C4</th>
+                                <th>C5</th>
+                                <th>C6</th>
+                                <th>C6+</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="left">BlackBriar</td>
+                                <td>4.92</td>
+                                <td>4.95</td>
+                                <td>4.99</td>
+                                <td>4.92</td>
+                                <td>4.93</td>
+                                <td>4.98</td>
+                                <td class="highlight"><strong>4.99</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Express Legal Funding</td>
+                                <td>3.36</td>
+                                <td>3.52</td>
+                                <td>4.58</td>
+                                <td>3.93</td>
+                                <td>4.35</td>
+                                <td>4.45</td>
+                                <td class="highlight"><strong>4.86</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="left">SalzburgerLand</td>
+                                <td>2.19</td>
+                                <td>2.63</td>
+                                <td class="highlight"><strong>4.92</strong></td>
+                                <td>4.06</td>
+                                <td>4.23</td>
+                                <td>4.82</td>
+                                <td>4.88</td>
+                            </tr>
+                            <tr>
+                                <td class="left">WordLift Blog</td>
+                                <td>1.91</td>
+                                <td>1.73</td>
+                                <td>4.55</td>
+                                <td>3.23</td>
+                                <td>2.55</td>
+                                <td>4.50</td>
+                                <td class="highlight"><strong>4.64</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Agentic Metrics</h3>
+
+                <div class="figure" style="text-align:center;margin:2em 0">
+                    <img src="figures/heatmap.png" alt="Accuracy heatmap across conditions and domains"
+                        style="max-width:85%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1)">
+                    <p style="font-size:0.9em;color:#666;margin-top:0.5em"><strong>Figure 6.</strong> Accuracy heatmap:
+                        conditions × domains, showing where enhanced pages and agentic RAG yield the greatest
+                        improvements.</p>
+                </div>
+
+                <div class="table-wrap">
+                    <table>
+                        <caption>Table 7: Agentic-specific metrics across conditions.</caption>
+                        <thead>
+                            <tr>
+                                <th class="left">Metric</th>
+                                <th>C4</th>
+                                <th>C5</th>
+                                <th>C6</th>
+                                <th>C6+</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="left">Links followed</td>
+                                <td>1.0</td>
+                                <td>0.6</td>
+                                <td>0.5</td>
+                                <td>0.4</td>
+                            </tr>
+                            <tr>
+                                <td class="left">Links available</td>
+                                <td>41.7</td>
+                                <td>41.9</td>
+                                <td>77.4</td>
+                                <td><strong>102.2</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="left">Max hop depth</td>
+                                <td>1.0</td>
+                                <td>0.6</td>
+                                <td>0.5</td>
+                                <td>0.4</td>
+                            </tr>
+                            <tr>
+                                <td class="left">Tool calls</td>
+                                <td>2.8</td>
+                                <td>2.3</td>
+                                <td>1.8</td>
+                                <td>1.7</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="result-box">
+                    Enhanced+ entity pages expose <strong>2.4× more discoverable links</strong> (102.2 vs 41.9) and
+                    <strong>2.5× more</strong> than plain HTML (vs 41.7). Interestingly, agents follow
+                    <em>fewer</em> links in C6+ (0.4 vs 1.0 in C4), yet achieve higher accuracy — suggesting that
+                    enhanced pages provide such rich context in the initial retrieval that the agent needs fewer
+                    additional exploration steps.
+                </div>
+
+                <!-- ===== 5. Discussion ===== -->
+                <h2>Discussion</h2>
+
+                <h3>Two Worlds of AI Search: Parsed vs. Flat Ingestion</h3>
+
+                <p>Our findings reveal a critical distinction in the emerging landscape of AI-powered search—one
+                    that has direct implications for the Generative Engine Optimization (GEO) community.</p>
+
+                <p>Today's AI search systems fall into two architectural categories with respect to structured data:
+                    <strong>parsed-extraction systems</strong> and <strong>flat-ingestion systems</strong>. This
+                    distinction determines whether JSON-LD metadata can improve answer quality.
+                </p>
+
+                <h3>From SEO to SEO 3.0: The Reasoning Web</h3>
+
+                <p>Our results provide the first controlled evidence for what might be called <strong>SEO 3.0</strong>:
+                    where optimization shifts from keywords (SEO 1.0) through entity markup (SEO 2.0) to designing
+                    content for <em>agent-navigable reasoning paths</em> over linked data.</p>
+
+                <h3>Implications for Web Publishers and GEO</h3>
+                <ol>
+                    <li><strong>JSON-LD alone does not help flat-text RAG</strong>: Our null result for H1 means that
+                        simply adding Schema.org markup will not improve performance in systems that treat pages as
+                        flat text. The structured data must be <em>surfaced</em> in a way agents can use.</li>
+                    <li><strong>Enhanced entity pages are the key</strong>: Designing pages with visible linked entity
+                        navigation, agent instructions, and neural search capabilities yields +29.6% accuracy
+                        improvements even in standard RAG. The Enhanced+ variant achieves +34.0% with the full agentic
+                        pipeline.</li>
+                    <li><strong>Dereferenceable URIs enable traversal</strong>: Publishing entities with URIs that
+                        support content negotiation allows agents to follow links across knowledge graph boundaries.
+                    </li>
+                </ol>
+
+                <h3>Implications for RAG System Design</h3>
+                <ol>
+                    <li><strong>Navigational affordances matter for agents</strong>: The gap between C5 and C6
+                        (4.40 vs 4.70) shows that even capable agents need explicit navigational cues to discover
+                        and integrate structured information effectively.</li>
+                    <li><strong>Multi-hop traversal unlocks relational knowledge</strong>: Agentic RAG provides the
+                        largest improvements for factual and relational queries, where following links to related
+                        entities directly addresses information needs.</li>
+                    <li><strong>Fewer hops, better answers</strong>: Enhanced pages enable agents to answer with fewer
+                        tool calls, suggesting that rich initial context reduces the need for exploration.
+                    </li>
+                </ol>
+
+                <h3>Limitations</h3>
+                <ul>
+                    <li><strong>Scale</strong>: 349 queries across 4 domains provides strong statistical power but
+                        larger experiments would further strengthen generalizability.</li>
+                    <li><strong>Single retrieval system</strong>: Results are specific to Vertex AI Vector Search 2.0;
+                        reproducibility with other vector databases or retrieval backends remains to be validated.</li>
+                    <li><strong>KG quality</strong>: Our domains use well-maintained knowledge graphs managed by the
+                        WordLift
+                        platform; effectiveness may differ for noisier or less curated KGs.</li>
+                    <li><strong>Model dependence</strong>: Although we use different model families for generation
+                        (Gemini 2.5 Flash) and evaluation (Gemini 3 Flash Preview), LLM-as-judge may still introduce
+                        systematic biases. A human evaluation study would strengthen our findings.</li>
+                </ul>
+
+                <h3>Ethical Considerations and Data Trustworthiness</h3>
+
+                <p>A critical aspect of our approach is that the structured data consumed by AI agents is
+                    <strong>the same data visible to human users</strong>. The JSON-LD embedded in each page
+                    describes the exact same entity properties, relationships, and facts that appear in the
+                    human-readable HTML representation. Similarly, dereferenceable entity URIs serve the
+                    same underlying data through content negotiation—whether rendered as HTML for humans,
+                    JSON-LD for machines, or Turtle for SPARQL queries.
+                </p>
+
+                <p>We believe this <strong>coupling between human and machine representations</strong> creates
+                    stronger faithfulness guarantees than architectures where AI systems consume entirely separate
+                    data feeds. In a fully decoupled web—where machines and humans follow two different tracks—there
+                    is no natural accountability mechanism: structured data could drift from visible content, or be
+                    deliberately manipulated to influence AI outputs without corresponding changes visible to
+                    users. In our approach, because the structured data <em>is</em> the page content (expressed in
+                    machine-readable form), any manipulation would also be visible to human visitors, creating a
+                    natural check on data integrity.</p>
+
+                <p>This observation has broader implications for the emerging reasoning web. As AI agents increasingly
+                    rely on structured data to construct answers, the trustworthiness of that data becomes paramount.
+                    Systems that maintain a <strong>single source of truth</strong>—serving both human and machine
+                    consumers—are inherently more auditable and resistant to adversarial manipulation than those
+                    that decouple the two channels.</p>
+
+                <h3>Future Work</h3>
+
+                <p>Our findings motivate several research directions:</p>
+                <ol>
+                    <li><strong>Structured-data-aware retrieval</strong>: The null result for H1 is specific to our
+                        flat-text ingestion pipeline. Future work should investigate architectures that extract JSON-LD
+                        separately and index entity properties as structured metadata.</li>
+                    <li><strong>Entity-centric chunking</strong>: Rather than truncating documents at a fixed character
+                        limit, entity-aware chunking strategies that preserve structured data blocks could improve
+                        retrieval for content-rich pages.</li>
+                    <li><strong>Cross-system replication</strong>: Replicating our experiment with retrieval systems
+                        that natively parse structured data would help disentangle the effect of structured data from
+                        the limitations of our ingestion pipeline.</li>
+                    <li><strong>Production-scale validation</strong>: Deploying enhanced entity pages on live websites
+                        and measuring their impact on AI-powered search engines (SGE, Perplexity) would validate
+                        ecological validity.</li>
+                    <li><strong>Recursive Language Models on Knowledge Graphs</strong>: Building on the RLM
+                        framework [29], we are exploring an approach (RLM-on-KG) that replaces the flat-context window
+                        with iterative graph exploration [30]. Rather than retrieving a fixed set of documents, the
+                        model navigates the knowledge graph recursively—fetching thin evidence from entity neighbors,
+                        deciding which relationships to follow, and synthesizing answers with full provenance. This
+                        extends our current agentic pipeline from tool-augmented retrieval to fully recursive,
+                        structure-guided reasoning over linked data.</li>
+                </ol>
+
+                <h3>Practical Recommendations</h3>
+                <p>Based on our findings, we recommend the following for practitioners:</p>
+                <ol>
+                    <li><strong>Go beyond JSON-LD</strong>: While Schema.org markup is valuable for search engines that
+                        extract it separately, our results show that flat-text RAG systems cannot exploit it. Invest in
+                        enhanced entity pages that surface structured data in human- and agent-readable format.</li>
+                    <li><strong>Design for agents</strong>: Include visible linked entity navigation, agent
+                        instructions,
+                        and neural search capabilities. These navigational affordances drive the +29.8%
+                        accuracy improvement in C6 and +34.0% in C6+.</li>
+                    <li><strong>Publish dereferenceable URIs</strong>: Ensure entity URIs support content negotiation so
+                        agents can follow links across knowledge graph boundaries.</li>
+                    <li><strong>Monitor agentic metrics</strong>: Track how agents interact with your content—links
+                        followed, hop depth, tool calls—to identify optimization opportunities.</li>
+                </ol>
+
+                <!-- ===== 6. Conclusion ===== -->
+                <h2>Conclusion</h2>
+
+                <p>We have presented a controlled experimental study demonstrating that structured linked data
+                    significantly improves answer quality across both stages of the emerging reasoning web—retrieval +
+                    synthesis (RAG) and agentic reasoning. Across 2,443 evaluations spanning four industry domains,
+                    we found that:</p>
+
+                <ol>
+                    <li>Schema.org JSON-LD markup provides only marginal improvements (+7.5% accuracy,
+                        $d=0.18$), confirming that flat-text RAG systems cannot fully exploit structured metadata
+                        embedded in HTML.</li>
+                    <li>Our enhanced entity page format yields +29.6% accuracy in standard RAG ($d = 0.60$) and
+                        +29.8% with agentic RAG ($d = 0.61$), demonstrating that the gains are robust across retrieval
+                        paradigms.</li>
+                    <li>The Enhanced+ condition (C6+) achieves the highest absolute scores
+                        (accuracy: 4.85/5, completeness: 4.55/5), representing +34.0% accuracy improvement over the
+                        baseline ($d = 0.65$).</li>
+                    <li>These effects generalize across editorial, legal, travel, and e-commerce domains.</li>
+                </ol>
+
+                <p>Our findings suggest that as the web evolves from retrieval to agentic reasoning, structured
+                    linked data transitions from a search optimization signal to a <strong>fundamental memory
+                        layer</strong> for AI systems. The Semantic Web's original vision—machine-readable structured
+                    data enabling intelligent agents—is being realized not through the browsers and SPARQL endpoints
+                    originally envisioned, but through LLM-powered agents that follow dereferenceable links,
+                    interpret Schema.org types, and reason across entity boundaries. For web publishers, the
+                    practical implication is clear: investing in structured linked data is no longer just about
+                    SEO—it is about ensuring visibility and accuracy in the reasoning web.</p>
+
+                <p><strong>Reproducibility.</strong> Dataset, evaluation framework, and enhanced entity page templates
+                    available
+                    at <a href="https://github.com/wordlift/spinning-lee">github.com/wordlift/spinning-lee</a>.</p>
+
+                <!-- ===== Acknowledgements ===== -->
+                <h2 style="counter-increment: none;">Acknowledgements</h2>
+                <p>We thank the Google Cloud team for their generous support through Cloud credits that made
+                    these experiments possible. All experiments—including embedding generation, vector search
+                    indexing, Gemini-based generation (Gemini 2.5 Flash) and evaluation (Gemini 3 Flash
+                    Preview), and the Vertex AI Vector Search 2.0 infrastructure—were run entirely on Google
+                    Cloud. We also thank the WordLift engineering team for maintaining the knowledge graph
+                    infrastructure and GraphQL API used in this study.</p>
+
+                <!-- ===== References ===== -->
+                <h2 style="counter-increment: none;">References</h2>
+                <div class="references">
+                    <ol>
+                        <li>Lewis, P. et al. Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. NeurIPS
+                            2020.</li>
+                        <li>Aggarwal, P. et al. GEO: Generative Engine Optimization. KDD 2024.</li>
+                        <li>Guu, K. et al. REALM: Retrieval-Augmented Language Model Pre-Training. ICML 2020.</li>
+                        <li>Borgeaud, S. et al. Improving Language Models by Retrieving from Trillions of Tokens. 2022.
+                        </li>
+                        <li>Asai, A. et al. Self-RAG: Learning to Retrieve, Generate, and Critique through
+                            Self-Reflection. 2024.</li>
+                        <li>Trivedi, H. et al. Interleaving Retrieval with Chain-of-Thought Reasoning. ACL 2023.</li>
+                        <li>Berners-Lee, T. et al. The Semantic Web. Scientific American 2001.</li>
+                        <li>Bizer, C. et al. Linked Data — The Story So Far. IJSWIS 2009.</li>
+                        <li>Guha, R.V. et al. Schema.org: Evolution of Structured Data on the Web. CACM 2016.</li>
+                        <li>Hogan, A. et al. Knowledge Graphs. ACM Computing Surveys 2021.</li>
+                        <li>Noy, N. et al. Industry-Scale Knowledge Graphs: Lessons and Challenges. 2019.</li>
+                        <li>Pan, S. et al. Unifying LLMs and Knowledge Graphs: A Roadmap. IEEE TKDE 2024.</li>
+                        <li>Peng, B. et al. Graph Retrieval-Augmented Generation: A Survey. 2024.</li>
+                        <li>Yao, S. et al. ReAct: Synergizing Reasoning and Acting in Language Models. ICLR 2023.</li>
+                        <li>Schick, T. et al. Toolformer: Language Models Can Teach Themselves to Use Tools. 2023.</li>
+                        <li>Google Cloud. Google Agent Development Kit (ADK). 2025.</li>
+                        <li>Mavi, V. et al. Multi-Hop Question Answering. AI Review 2024.</li>
+                        <li>llms.txt — A Proposal for Standardizing LLM Instructions. 2024.</li>
+                        <li>Google Cloud. Vertex AI Vector Search 2.0: Self-Tuning AI-Native Search. 2025.</li>
+                        <li>Google DeepMind. Gemini: A Family of Highly Capable Multimodal Models. 2024.</li>
+                        <li>Zheng, L. et al. Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena. NeurIPS 2023.</li>
+                        <li>Jiang, A.Q. et al. RAFT: Adapting Language Model to Domain Specific RAG. 2024.</li>
+                        <li>Shi, W. et al. REPLUG: Retrieval-Augmented Black-Box Language Models. NAACL 2024.</li>
+                        <li>Ye, J. et al. RoG: Reasoning on Graphs: Faithful and Interpretable LLM Reasoning. ICLR 2024.
+                        </li>
+                        <li>Xi, Z. et al. The Rise and Potential of Large Language Model Based Agents: A Survey. 2023.
+                        </li>
+                        <li>Wang, L. et al. A Survey on Large Language Model Based Autonomous Agents. 2024.</li>
+                        <li>Balog, K. et al. Entity-Oriented Search. Springer 2018.</li>
+                        <li>Nentwig, M. et al. A Survey of Current Link Discovery Frameworks. Semantic Web 2017.</li>
+                        <li>Paulheim, H. Knowledge Graph Refinement: A Survey of Approaches and Evaluation Methods.
+                            Semantic Web 2017.</li>
+                        <li>Cohen, D. et al. WSDM Cup 2017: Vandalism Detection and Triple Scoring. WSDM 2017.</li>
+                        <li>Zhang, C., Kraska, T. and Khattab, O. Recursive Language Models: A Theoretical Framework for
+                            Language Model Reasoning over Long Texts. arXiv:2501.12394, 2025.</li>
+                        <li>Volpini, A. RLM-on-KG: Recursive Language Models and the Future of SEO. <a
+                                href="https://wordlift.io/blog/en/recursive-language-models-on-kg/">wordlift.io</a>,
+                            2025.</li>
+                    </ol>
+                </div>
+
+                <!-- ===== Appendix ===== -->
+                <h2 style="counter-increment: none;">Appendix A: Full Prompts and Templates</h2>
+
+                <h3>A.1 Standard RAG Generation Prompt</h3>
+                <p>The following prompt is used by Gemini 2.5 Flash to generate answers from retrieved context
+                    in conditions C1–C3 (standard RAG):</p>
+                <pre
+                    style="background: #f5f5f5; padding: 12px; border-radius: 4px; font-size: 8.5pt; white-space: pre-wrap; border: 1px solid #ddd;">You are a helpful assistant answering questions based on the provided context documents.
+
+IMPORTANT RULES:
+1. Answer ONLY based on the information in the context documents below.
+2. If the context does not contain enough information, say "I cannot find
+   sufficient information to answer this question."
+3. Cite the specific documents you used by their ID.
+4. Be precise and factual.
+
+CONTEXT DOCUMENTS:
+{context}
+
+QUESTION: {query}
+
+Provide a clear, accurate answer with citations to the source documents.</pre>
+
+                <h3>A.2 Agentic RAG System Instruction</h3>
+                <p>The following system instruction is provided to the Google ADK agent in conditions C4–C6
+                    (agentic RAG). The agent uses this instruction to plan its tool-calling strategy:</p>
+                <pre
+                    style="background: #f5f5f5; padding: 12px; border-radius: 4px; font-size: 8.5pt; white-space: pre-wrap; border: 1px solid #ddd;">You are a research assistant with access to a knowledge graph and document search.
+Your goal is to answer the user's question as accurately and completely as possible.
+
+STRATEGY:
+1. First, use search_documents to find relevant documents.
+2. Examine the results for linked entity URLs (especially data.wordlift.io URLs).
+3. If the question requires information about related entities (provider, offers,
+   etc.), use follow_entity_link to fetch their data.
+4. If you need to discover entities not directly linked, use search_knowledge_graph.
+5. Synthesize all gathered information into a comprehensive answer.
+6. Cite your sources by document ID or entity URL.
+
+RULES:
+- Only state facts you found in the retrieved data. Do not hallucinate.
+- Follow at most {max_hops} link hops.
+- If you cannot find sufficient information, say so explicitly.</pre>
+
+                <h3>A.3 LLM Judge Prompts</h3>
+                <p>Three evaluation prompts are used by the independent judge model (Gemini 3 Flash Preview).
+                    All judge calls request JSON output via <code>response_mime_type="application/json"</code>.</p>
+
+                <p><strong>Accuracy (1–5):</strong></p>
+                <pre
+                    style="background: #f5f5f5; padding: 12px; border-radius: 4px; font-size: 8.5pt; white-space: pre-wrap; border: 1px solid #ddd;">You are an evaluation judge. Given a question, a ground-truth answer, and a
+candidate answer produced by a system, rate the candidate's factual accuracy.
+
+Question: {question}
+Ground Truth Answer: {ground_truth}
+Candidate Answer: {candidate}
+
+Rate the accuracy on a scale of 1-5:
+  1 = Completely wrong or irrelevant
+  2 = Mostly wrong, with minor correct elements
+  3 = Partially correct, missing key facts
+  4 = Mostly correct, minor inaccuracies
+  5 = Fully correct and accurate
+
+Respond in JSON format ONLY:
+{"score": &lt;1-5&gt;, "reasoning": "brief explanation"}</pre>
+
+                <p><strong>Completeness (1–5):</strong></p>
+                <pre
+                    style="background: #f5f5f5; padding: 12px; border-radius: 4px; font-size: 8.5pt; white-space: pre-wrap; border: 1px solid #ddd;">You are an evaluation judge. Given a question, a ground-truth answer containing
+key facts, and a candidate answer, rate the completeness of the candidate.
+
+Question: {question}
+Ground Truth (contains key facts the answer should cover): {ground_truth}
+Candidate Answer: {candidate}
+
+Rate completeness on a scale of 1-5:
+  1 = Covers none of the key facts
+  2 = Covers ~25% of key facts
+  3 = Covers ~50% of key facts
+  4 = Covers ~75% of key facts
+  5 = Covers all key facts
+
+Respond in JSON format ONLY:
+{"score": &lt;1-5&gt;, "facts_covered": [...], "facts_missing": [...],
+ "reasoning": "brief explanation"}</pre>
+
+                <p><strong>Grounding (binary):</strong></p>
+                <pre
+                    style="background: #f5f5f5; padding: 12px; border-radius: 4px; font-size: 8.5pt; white-space: pre-wrap; border: 1px solid #ddd;">You are an evaluation judge. Given a candidate answer and the source documents
+it was based on, determine what fraction of claims in the answer are traceable
+to the source documents.
+
+Candidate Answer: {candidate}
+Source Documents: {sources}
+
+For each claim in the answer, determine if it is supported by the source documents.
+
+Respond in JSON format ONLY:
+{"grounding_score": &lt;0.0-1.0&gt;, "total_claims": &lt;int&gt;,
+ "grounded_claims": &lt;int&gt;, "ungrounded_claims": ["claim1", "claim2"]}</pre>
+
+                <h3>A.4 Enhanced Entity Page Template</h3>
+                <p>The enhanced entity page template (Jinja2) used for condition C3 and C6 documents.
+                    Key features: Schema.org type breadcrumbs, embedded JSON-LD, visible linked entity
+                    navigation with content negotiation instructions, and <code>llms.txt</code>-style
+                    agent instructions.</p>
+                <pre
+                    style="background: #f5f5f5; padding: 12px; border-radius: 4px; font-size: 8.5pt; white-space: pre-wrap; border: 1px solid #ddd;">&lt;!DOCTYPE html&gt;
+&lt;html lang="en" prefix="schema: http://schema.org/"&gt;
+&lt;head&gt;
+  &lt;title&gt;{{ entity_name }} — {{ domain_name }}&lt;/title&gt;
+  &lt;script type="application/ld+json"&gt;{{ jsonld_data }}&lt;/script&gt;
+&lt;/head&gt;
+&lt;body vocab="http://schema.org/" typeof="{{ entity_types }}"&gt;
+
+  &lt;!-- Type breadcrumbs --&gt;
+  &lt;nav class="breadcrumb"&gt;Thing › CreativeWork › {{ entity_types }}&lt;/nav&gt;
+
+  &lt;h1 property="name"&gt;{{ entity_name }}&lt;/h1&gt;
+  &lt;div class="entity-type"&gt;Type: schema:{{ entity_types }}&lt;/div&gt;
+
+  &lt;section&gt;&lt;h2&gt;Description&lt;/h2&gt;
+    &lt;p property="description"&gt;{{ entity_description }}&lt;/p&gt;
+  &lt;/section&gt;
+
+  &lt;!-- Linked entity navigation --&gt;
+  &lt;section class="linked-entities"&gt;&lt;h2&gt;Related Entities&lt;/h2&gt;
+    &lt;p&gt;Each URI supports content negotiation — append .json for
+    JSON-LD, .ttl for Turtle, or .html for a human-readable view.&lt;/p&gt;
+    &lt;ul&gt;{% for le in linked_entities %}
+      &lt;li&gt;&lt;span class="relation"&gt;{{ le.relation }}:&lt;/span&gt;
+          &lt;a href="{{ le.url }}"&gt;{{ le.url }}&lt;/a&gt;&lt;/li&gt;
+    {% endfor %}&lt;/ul&gt;
+  &lt;/section&gt;
+
+  &lt;!-- Agent instructions (llms.txt style) --&gt;
+  &lt;section class="agent-instructions"&gt;
+    &lt;h2&gt;🤖 Agent Instructions&lt;/h2&gt;
+    &lt;pre&gt;{{ llms_instructions }}&lt;/pre&gt;
+  &lt;/section&gt;
+
+&lt;/body&gt;&lt;/html&gt;</pre>
+
+    </div>
+
+</body>
+
+</html>

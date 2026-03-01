@@ -62,8 +62,8 @@ agentic:
 # Models
 # ---------------------------------------------------------------------------
 models:
-  generation: gemini-2.0-flash
-  judge: gemini-2.0-flash
+  generation: gemini-2.5-flash
+  judge: gemini-2.5-flash
   embedding: text-embedding-005
 
 # ---------------------------------------------------------------------------

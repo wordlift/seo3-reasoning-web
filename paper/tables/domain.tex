@@ -1,15 +1,19 @@
 \begin{table}[t]
 \centering
-\caption{Mean accuracy by condition and domain.}
+\caption{Mean accuracy by condition and domain, with per-domain
+effect sizes for the key C6+ vs.\ C1 comparison.
+$n$ = number of queries per domain.}
 \label{tab:domain}
-\begin{tabular}{@{}lccccccc@{}}
+\begin{tabular}{@{}lrcccccccr@{}}
 \toprule
-\textbf{Domain} & \textbf{C1} & \textbf{C2} & \textbf{C3} & \textbf{C4} & \textbf{C5} & \textbf{C6} & \textbf{C6+} \\
+\textbf{Domain} & \textbf{$n$} & \textbf{C1} & \textbf{C2} & \textbf{C3} & \textbf{C4} & \textbf{C5} & \textbf{C6} & \textbf{C6+} & \textbf{$\Delta_{\text{C6+}}$} \\
 \midrule
-BlackBriar & 4.92 & 4.89 & 4.91 & 4.75 & 4.74 & 4.96 & \textbf{4.99} \\
-Express Legal Funding & 3.36 & 4.20 & 4.29 & 4.33 & 4.29 & 4.32 & \textbf{4.86} \\
-SalzburgerLand & 2.19 & 2.33 & \textbf{4.92} & 4.06 & 4.25 & 4.82 & 4.66 \\
-WordLift Blog & 1.91 & 1.73 & 4.55 & 3.14 & 3.38 & 4.45 & \textbf{4.64} \\
+BlackBriar & 137 & 4.92 & 4.89 & 4.91 & 4.75 & 4.74 & 4.96 & \textbf{4.99} & +0.07 \\
+Expr.\ Legal & 111 & 3.36 & 4.20 & 4.29 & 4.33 & 4.29 & 4.32 & \textbf{4.86} & +1.50 \\
+SalzburgerLand & 79 & 2.19 & 2.33 & \textbf{4.92} & 4.06 & 4.25 & 4.82 & 4.66 & +2.47 \\
+WordLift Blog & 22 & 1.91 & 1.73 & 4.55 & 3.14 & 3.38 & 4.45 & \textbf{4.64} & +2.73 \\
+\midrule
+\textit{All domains} & \textit{349} & \textit{3.62} & \textit{3.89} & \textit{4.69} & \textit{4.36} & \textit{4.40} & \textit{4.70} & \textit{\textbf{4.85}} & \textit{+1.10} \\
 \bottomrule
 \end{tabular}
 \end{table}

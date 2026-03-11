@@ -24,12 +24,12 @@ for Agent-Orchestrated Retrieval}
 
 \titlerunning{Structured Linked Data for Agent-Orchestrated Retrieval}
 
-\author{Andrea Volpini \and Elie Raad \and David Riccitelli}
+\author{Andrea Volpini \and Elie Raad \and Beatrice Gamba \and David Riccitelli}
 
 \authorrunning{Volpini et al.}
 
 \institute{WordLift, Rome, Italy\\
-\email{\{andrea, elie, david\}@wordlift.io}}
+\email{\{andrea, elie, beatrice, david\}@wordlift.io}}
 
 \maketitle
 
@@ -57,9 +57,10 @@ format---incorporating \texttt{llms.txt}-style agent instructions,
 breadcrumbs, and neural search capabilities---achieves substantial
 gains: +29.6\% accuracy improvement for standard RAG ($p < 10^{-21}$,
 $d = 0.60$) and +29.8\% for the full agentic pipeline ($p < 10^{-21}$,
-$d = 0.61$). The Enhanced+ condition achieves the highest absolute
-scores (accuracy: 4.85/5, completeness: 4.55/5), representing a
-+34.0\% improvement over the baseline ($p < 10^{-24}$, $d = 0.65$).
+$d = 0.61$). The Enhanced+ variant, with richer navigational
+affordances, achieves the highest absolute scores (accuracy: 4.85/5,
+completeness: 4.55/5) though the incremental gain over the base
+enhanced format is not statistically significant ($d = 0.08$).
 We release our dataset, evaluation framework,
 and enhanced entity page templates to support reproducibility.
 
@@ -114,9 +115,11 @@ We make the following contributions:
           and an Enhanced+ variant with richer navigational affordances.
     \item Empirical evidence showing that enhanced entity pages yield
           the strongest improvements: +29.6\% accuracy in standard RAG
-          ($d = 0.60$) and +34.0\% in the full Enhanced+ agentic pipeline
-          ($d = 0.65$), while JSON-LD markup alone provides only
-          marginal improvements.
+          ($d = 0.60$) and +29.8\% in the agentic pipeline
+          ($d = 0.61$), while JSON-LD markup alone provides only
+          marginal improvements.  The Enhanced+ variant achieves the
+          highest absolute scores but offers no statistically significant
+          gain over the base enhanced format.
     \item A reusable dataset and evaluation harness released for
           reproducibility.
 \end{itemize}
@@ -173,10 +176,25 @@ for multimedia content enrichment.
 Recent surveys examine the unification of LLMs and knowledge
 graphs~\cite{pan2024graphrag}, while Graph RAG approaches
 explicitly leverage graph structure during
-retrieval~\cite{peng2024graphretrieval}. Our work differs from
-Graph RAG in that we do not require a purpose-built graph database;
-instead, we leverage \emph{existing} structured data already published
-on the web via Schema.org and Linked Data Platforms.
+retrieval~\cite{peng2024graphretrieval}.
+
+Several recent systems construct retrieval graphs from documents to
+improve RAG.  LightRAG~\cite{guo2024lightrag} builds a graph index
+from document-extracted entities and relations, using dual-level
+retrieval (low-level for specific facts, high-level for topics) to
+outperform traditional RAG on multi-hop questions.
+HippoRAG~\cite{gutierrez2024hipporag} models retrieval after the
+hippocampal memory indexing theory, constructing a knowledge graph
+from passages and using personalized PageRank for context-sensitive
+retrieval.  Both systems demonstrate the value of graph structure
+for retrieval, but differ from our approach in a fundamental way:
+they construct purpose-built graphs at indexing time from unstructured
+text, whereas we leverage \emph{existing} structured data already
+published on the web via Schema.org and Linked Data Platforms.  Our
+approach requires no graph construction step---the knowledge graph
+is the publisher's source of truth, maintained independently of the
+retrieval system, and accessible through dereferenceable URIs that
+support content negotiation.
 
 \subsection{Agentic AI and Tool-Augmented LLMs}
 
@@ -206,8 +224,9 @@ search systems that follow links to aggregate information.
 Our experimental system mirrors the emerging architecture of AI-powered
 search engines such as Google's AI Mode, which retrieves web pages,
 reasons over their structured content, and synthesizes multi-source
-answers.  Our pipeline reproduces this pattern using production Google
-Cloud components:
+answers.  Our pipeline reproduces this pattern using Google
+Cloud components for retrieval and reasoning, combined with an
+independent knowledge graph for structured data:
 
 \begin{itemize}
     \item \textbf{Vertex AI Vector Search 2.0}~\cite{vertexai2025} serves
@@ -224,10 +243,11 @@ Cloud components:
           Mode's multi-step reasoning, our agent can plan a sequence of
           actions---search, follow links, search the knowledge graph---before
           synthesizing a final answer.
-    \item \textbf{WordLift Knowledge Graph} acts as the structured data
-          layer, providing Schema.org-typed entities with dereferenceable
-          URIs that support content negotiation
-          (\texttt{application/ld+json}, \texttt{text/turtle},
+    \item \textbf{WordLift Knowledge Graph}~\cite{volpini2015wordlift}, an
+          independent Linked Data Platform (not a Google Cloud service),
+          acts as the structured data layer.  It provides Schema.org-typed
+          entities with dereferenceable URIs that support content
+          negotiation (\texttt{application/ld+json}, \texttt{text/turtle},
           \texttt{text/html}).  This is analogous to how AI Mode leverages
           structured data already present in web pages to enhance
           understanding.
@@ -318,8 +338,8 @@ visible to both humans and AI agents.
 for a sample entity. The enhanced format adds structured breadcrumbs, related
 entity links with dereferenceable URIs, agent instructions in
 \texttt{llms.txt} style, and an embedded JSON-LD block---yielding a +29.6\%
-accuracy improvement in standard RAG and +34.0\% in the full
-Enhanced+ agentic pipeline.}
+accuracy improvement in standard RAG and +29.8\% in the
+agentic pipeline.}
 \label{fig:entity_comparison}
 \end{figure}
 
@@ -370,20 +390,20 @@ Our dataset spans four industry verticals, chosen to test generalizability
 across diverse content types and knowledge graph structures:
 
 \begin{itemize}
-    \item \textbf{WordLift Blog} (editorial): 7 entities, 21 queries.
+    \item \textbf{WordLift Blog} (editorial): 16 entities, 22 queries.
           Blog articles about SEO, knowledge graphs, and AI content.
-    \item \textbf{Express Legal Funding} (legal): 23 entities, 69 queries.
+    \item \textbf{Express Legal Funding} (legal): 32 entities, 111 queries.
           Legal concepts including pre-settlement funding, personal injury,
           structured settlements, and regulatory topics.
-    \item \textbf{SalzburgerLand} (travel): 26 entities, 78 queries.
+    \item \textbf{SalzburgerLand} (travel): 54 entities, 79 queries.
           Restaurants, alpine huts, and tourist establishments in the
           Salzburg region of Austria.
-    \item \textbf{BlackBriar} (e-commerce): 46 entities, 137 queries.
+    \item \textbf{BlackBriar} (e-commerce): 56 entities, 137 queries.
           Outdoor gear products with detailed offers, pricing, and
           product specifications.
 \end{itemize}
 
-In total, the dataset comprises \textbf{102 entities} and \textbf{349
+In total, the dataset comprises \textbf{158 entities} and \textbf{349
 test queries}. Entities were collected from four Linked Data Platforms
 using GraphQL-based entity search, yielding structured data in JSON-LD
 format with Schema.org typing. Each entity was transformed into three
@@ -391,10 +411,21 @@ document variants (plain HTML, HTML+JSON-LD, enhanced entity page) plus
 an Enhanced+ variant, and ingested into separate Vertex AI Vector Search
 2.0 collections.
 
-Test queries were generated using a hybrid approach: template-based
-generation for factual, relational, and comparative query types, augmented
-by LLM-generated queries (Gemini 2.0 Flash) that explore entity
-relationships and cross-entity reasoning. All seven conditions are
+Test queries were generated using template-based generation for three
+query types: factual (direct attribute lookup), relational (requiring
+link traversal to related entities), and comparative (reasoning across
+multiple entities).  Ground-truth answers were derived from the same
+KG structured data (JSON-LD) used to construct entity pages.  For
+factual queries, ground truths consist of entity descriptions extracted
+from Schema.org properties; for relational queries, they reference the
+target linked-entity URIs; for comparative queries, they require data
+from both entities.  We acknowledge that this creates a potential
+circularity: conditions that present KG data more directly (C3/C6/C6+)
+may score higher not because they enable better retrieval but because
+the evaluation favours content that textually matches the KG-derived
+ground truth.  We discuss this limitation in Section~\ref{sec:limitations}.
+
+All seven conditions are
 evaluated on the identical set of 349 queries, ensuring fair
 apples-to-apples comparison.
 
@@ -411,8 +442,19 @@ three metrics:
           contextual details.
     \item \textbf{Grounding} (binary 0/1): Whether the answer is
           faithfully grounded in the retrieved documents, without
-          hallucinated content. Measured for standard RAG only (C1--C3),
-          as agentic RAG retrieval boundaries are less well-defined.
+          hallucinated content. Measured for standard RAG only (C1--C3).
+          For agentic conditions (C4--C6+), grounding is not assessed
+          because the agent's retrieval boundary is dynamic: it
+          follows links, issues additional searches, and accumulates
+          evidence over multiple steps, making it difficult to define
+          the reference document set.  Although the ADK framework
+          logs all tool calls and retrieved documents, defining grounding
+          against the union of all evidence encountered during the
+          reasoning trace is a non-trivial evaluation design problem
+          that we leave for future work.  We acknowledge that without
+          this measurement, high accuracy scores in C6/C6+ could
+          partially reflect the model's parametric knowledge rather
+          than faithful use of retrieved KG data.
 \end{itemize}
 
 For agentic conditions (C4--C6, C6+), we additionally track:
@@ -610,22 +652,35 @@ across both retrieval modes:
 \end{itemize}
 
 C6+ achieves the highest scores across all conditions (accuracy:
-4.85/5, completeness: 4.55/5), representing a \textbf{+34.0\%
-accuracy improvement} and \textbf{+51.2\% completeness improvement}
-over the baseline. Notably, while C6+ outperforms C6 in absolute terms,
+4.85/5, completeness: 4.55/5). Notably, while C6+ outperforms C6 in absolute terms,
 the C6 $\rightarrow$ C6+ difference is not statistically significant
 ($\Delta = +0.06$, $p_\text{adj} = 1.0$, $d = 0.08$), suggesting that
 the base enhanced entity page format captures most of the benefit.
 The medium--large effect sizes ($d \approx 0.65$--$0.77$) confirm that
 enhanced entity pages consistently outperform all other document formats.
 
+\paragraph{The agent's role is complementary, not primary.}
+A notable observation is that C3 (enhanced, standard RAG: 4.69) and C6
+(enhanced, agentic RAG: 4.70) achieve effectively identical accuracy.
+This indicates that \emph{when the document format is optimized, the
+agent provides negligible additional accuracy lift}.  In contrast, the
+agent provides substantial lift on poorly formatted documents: C4
+(plain HTML, agentic: 4.36) vs.\ C1 (plain HTML, standard: 3.62),
+$\Delta = +0.74$.  The agent thus primarily compensates for
+inadequate content structure rather than amplifying well-structured content.
+However, the agentic architecture remains valuable for retrieval
+\emph{efficiency}: as Table~\ref{tab:agentic} shows, agents on enhanced
+pages follow fewer links while maintaining performance, and the Enhanced+
+format (C6+) achieves the overall best result ($4.85$) by combining both
+approaches.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/improvement_waterfall.pdf}
 \caption{Accuracy improvement waterfall showing the cumulative effect of
 each optimization layer: JSON-LD markup, agentic retrieval, and enhanced
-entity pages. The largest gains come from enhanced page presentation,
-not from adding structured data alone.}
+entity pages. The largest gains come from link materialization in
+enhanced pages, not from adding structured data alone.}
 \label{fig:waterfall}
 \end{figure}
 
@@ -668,38 +723,81 @@ and extractable.
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{figures/domain_bars.pdf}
-\caption{Mean accuracy by domain and condition. The effect of enhanced
-entity pages generalizes across all four verticals, with the largest
-gains in editorial (WordLift Blog) and travel (SalzburgerLand) domains.}
+\caption{Mean accuracy by domain and condition. The direction of the
+effect is consistent across all four verticals, but its magnitude
+varies with domain characteristics---largest where the knowledge graph
+provides information beyond the plain HTML (travel, editorial),
+near-zero where the baseline is already fact-rich (e-commerce).}
 \label{fig:domain_bars}
 \end{figure}
 
 The domain-level results (Table~\ref{tab:domain} and
-Figure~\ref{fig:domain_bars}) demonstrate that
-the effect generalizes across all four verticals, while its magnitude
-varies with domain characteristics:
+Figure~\ref{fig:domain_bars}) reveal that the direction of the effect is
+consistent across all four verticals, but its magnitude varies
+substantially with domain characteristics.  This variation is itself
+informative and should be considered alongside the aggregate figures
+reported in Section~\ref{sec:h3}.
+
+\paragraph{Domain composition caveat.}
+Our dataset is not uniformly distributed: BlackBriar accounts for 39\%
+of queries ($n = 137$) yet contributes virtually no improvement due to
+its ceiling-level baseline, while WordLift Blog represents only 6\%
+($n = 22$) and produces the largest gains.  The aggregate
+$\Delta_{\text{C6+}} = +1.10$ (accuracy) therefore blends near-zero
+improvement in the largest domain with large improvements in smaller
+domains.  Table~\ref{tab:domain} reports per-domain deltas to make this
+distribution transparent; we recommend readers interpret the
+domain-stratified results rather than relying on the aggregate alone.
 
 \begin{itemize}
-    \item \textbf{BlackBriar} (e-commerce) achieves near-perfect
-          scores across all conditions (C1: 4.92, C6+: 4.99), likely
-          because product entities have well-structured Schema.org
-          \texttt{Product}/\texttt{Offer} metadata with clear,
-          factual properties that are already well-represented in
-          embeddings.
-    \item \textbf{SalzburgerLand} (travel) shows the most dramatic
+    \item \textbf{BlackBriar} (e-commerce, $n = 137$) achieves near-perfect
+          scores across all conditions (C1: 4.92, C3: 4.91, C6+: 4.99,
+          $\Delta = +0.07$).
+          This is expected under the link-materialization hypothesis:
+          e-commerce product pages already render key entity properties
+          (name, price, description, availability) as visible HTML,
+          so the enhanced template adds little novel information.
+          The near-ceiling baseline (4.92/5) also limits measurable
+          headroom, but the ceiling itself is informative---it
+          confirms that when plain HTML already contains sufficient
+          factual content, the enhanced format provides no additional
+          benefit, consistent with information enrichment (rather than
+          presentation alone) driving the gains in other domains.
+    \item \textbf{SalzburgerLand} (travel, $n = 79$) shows the most dramatic
           improvement from enhanced pages: C3 (4.92) vs.\ C1 (2.19),
-          indicating that the enhanced page format is particularly
-          effective for entities with rich geo-spatial and categorical
-          metadata. Agentic RAG also helps: C6 (4.82) vs.\ C4 (4.06).
-    \item \textbf{WordLift Blog} (editorial) benefits most from
+          $\Delta = +2.47$ for C6+.  Travel entities store key structured
+          properties---geo-coordinates, cuisine types, opening hours,
+          containment relationships (e.g., ``contained in Zell am
+          See'')---primarily in the knowledge graph.  The plain HTML
+          (C1) references these as opaque URIs in a property table;
+          the enhanced page materializes them as readable text,
+          explaining the large gain.
+    \item \textbf{WordLift Blog} (editorial, $n = 22$) benefits most from
           enhanced pages: C3 (4.55) and C6+ (4.64) dramatically
           outperform plain HTML conditions (C1: 1.91, C2: 1.73),
-          suggesting that editorial content's complex topic
-          relationships require explicit structured presentation.
-    \item \textbf{Express Legal Funding} (legal) benefits substantially from
-          the Enhanced+ format: C6+ (4.86) vs.\ C1 (3.36), showing that
-          richer navigational affordances help with complex legal concepts.
+          $\Delta = +2.73$.  Editorial content relies on entity
+          relationships (``about'', ``mentions'', ``related topics'')
+          that are encoded in the knowledge graph but absent from
+          the article HTML.  The enhanced page surfaces these
+          relationships explicitly.  We note that this domain has
+          the smallest sample size ($n = 22$) and its results should
+          be interpreted with appropriate caution.
+    \item \textbf{Express Legal Funding} (legal, $n = 111$) benefits substantially from
+          the Enhanced+ format: C6+ (4.86) vs.\ C1 (3.36),
+          $\Delta = +1.50$, showing that
+          richer navigational affordances help with complex legal concepts
+          whose relationships are captured in the knowledge graph.
 \end{itemize}
+
+This domain-level pattern is consistent with the link-materialization
+mechanism described in Section~\ref{sec:discussion}: the magnitude of
+improvement correlates with the degree to which the knowledge graph
+provides information beyond what the plain HTML already contains.
+Where the original content is already fact-rich (e-commerce), the
+enhanced format adds nothing; where key properties exist primarily
+in the graph (travel, editorial), the gains are largest.  The
+pattern demands explanation---and the information-enrichment
+hypothesis provides it.
 
 \subsection{Agentic Metrics}
 
@@ -852,8 +950,8 @@ affordances and tool-accessible endpoints).
     \item \textbf{Enhanced entity pages are the bridge}: Our format---with
           natural language summaries, navigable links, and
           \texttt{llms.txt}-style agent instructions---achieves
-          +29.6\% accuracy in standard RAG and +34.0\% with the full
-          Enhanced+ agentic pipeline. It works \emph{in both worlds}: the structured
+          +29.6\% accuracy in standard RAG and +29.8\% with the
+          agentic pipeline. It works \emph{in both worlds}: the structured
           JSON-LD is still present for traditional parsers, while the
           human- and agent-readable presentation ensures RAG systems
           can also leverage it.
@@ -870,23 +968,51 @@ Our results challenge the dominant ``documents as flat text'' paradigm
 and point toward structured-data-aware retrieval:
 
 \begin{enumerate}
-    \item \textbf{Presentation matters more than presence}:
-          Our experiment shows that the \emph{same underlying knowledge}
-          (Schema.org entities) yields dramatically different results
-          depending on how it is presented to the retrieval pipeline.
-          Raw JSON-LD in a \texttt{\textless script\textgreater} tag:
-          no effect. The same information rendered as natural language
-          with explicit properties, links, and navigation: +29.5--30.8\%
-          accuracy gain.
-    \item \textbf{Navigational affordances matter for agents}:
+    \item \textbf{Data quality through link materialization}:
+          The enhanced entity page does not merely reformat the same
+          information---it \emph{materializes} linked data.  The
+          baseline HTML (C1) contains references to related entities
+          (addresses, geo-coordinates, offers, providers) as opaque
+          URIs that an LLM cannot interpret without dereferencing.
+          The enhanced page resolves those links and renders the
+          connected entity data as natural language, creating a
+          self-contained, information-rich document.  This is not a
+          confound; it is the core value proposition of a
+          knowledge graph: traversing typed relationships to assemble
+          richer context than any single document contains.
+
+          Crucially, all materialized data originates from the same
+          openly accessible Linked Data Platform---the same
+          dereferenceable URIs visible in the baseline HTML.  The
+          structured data is referenced, auditable, and
+          independently verifiable, making it easy to trust and
+          validate.  The +29.6\% accuracy gain therefore reflects
+          the quality and accessibility of the underlying data, not
+          the technology stack used to present it.
+    \item \textbf{Navigational affordances as a complementary strategy}:
           The gap between C5 and C6 (accuracy: 4.40 vs.\ 4.70)
           shows that even capable agents need explicit navigational
-          cues to effectively explore linked data.
+          cues to effectively explore linked data.  However, we
+          acknowledge that the agent's incremental accuracy contribution
+          is small when document format is already optimized:
+          C3 (4.69) and C6 (4.70) are effectively equivalent.
+          The agent's primary value is twofold: (a)~compensating for
+          suboptimal content structure---the largest agentic lift
+          occurs on plain HTML ($\Delta = +0.74$)---and (b)~retrieval
+          efficiency, as agents on enhanced pages follow fewer links
+          while maintaining accuracy.  The title's reference to
+          ``agent-orchestrated retrieval'' reflects the full
+          experimental architecture, not a claim that the agent is
+          the primary driver of accuracy gains.
     \item \textbf{Enhanced pages enable efficient retrieval}:
           Agents using enhanced pages (C6) make fewer tool calls
           yet achieve higher accuracy, suggesting
           that well-structured content reduces the need for
-          multi-hop exploration.
+          multi-hop exploration.  By flattening the graph
+          neighbourhood into the entity page, the enhanced format
+          lets the LLM obtain in a single retrieval step what the
+          agentic pipeline would otherwise need multiple hops to
+          collect.
     \item \textbf{Toward structured-data-aware ingestion}: RAG system
           designers should consider architectures that extract and
           separately index structured data blocks---mirroring what
@@ -895,9 +1021,46 @@ and point toward structured-data-aware retrieval:
 \end{enumerate}
 
 \subsection{Limitations}
+\label{sec:limitations}
 
 Our study has several limitations:
 \begin{itemize}
+    \item \textbf{Information content versus presentation format}:
+          The enhanced entity page (C3/C6) differs from the plain HTML
+          baseline (C1) in two ways simultaneously: it restructures
+          the layout (breadcrumbs, agent instructions, navigable links)
+          \emph{and} it materializes data from related entities in the
+          knowledge graph that the baseline only references via URIs.
+          Our experiment does not include an ablation that isolates
+          these two factors---e.g., an enhanced page restricted to
+          only those facts verifiably present in the C1 HTML body.
+
+          \medskip
+
+          We argue that this bundling is deliberate and ecologically
+          valid: the entire purpose of a knowledge-graph-backed entity
+          page is to resolve linked data and present a complete,
+          self-contained view of an entity and its relationships.
+          Stripping away the materialized linked data would remove the
+          core value proposition of the knowledge graph.  Importantly,
+          all data surfaced in the enhanced page originates from the
+          same openly accessible Linked Data Platform---the same
+          dereferenceable URIs that appear in C1---and is therefore
+          independently verifiable.
+
+          \medskip
+
+          The H1 result provides a useful constraint: adding JSON-LD
+          to plain HTML (C1 vs.\ C2) yields only $d = 0.18$,
+          confirming that structured data in a hidden
+          \texttt{\textless script\textgreater} block provides
+          negligible benefit in flat-text RAG systems.  A natural
+          follow-up ablation---``enhanced page minus JSON-LD''---would
+          test whether removing the embedded structured data block
+          from C3 changes performance; we expect it would not,
+          since the same information is already expressed in natural
+          language.
+
     \item \textbf{Flat-text ingestion architecture}: A critical
           architectural consideration is how our retrieval pipeline
           handles structured data. Vertex AI Vector Search 2.0 ingests
@@ -926,12 +1089,26 @@ Our study has several limitations:
     \item \textbf{Scale}: While 349 queries across 4 domains provides
           strong statistical power, larger-scale experiments would
           further strengthen generalizability claims.
-    \item \textbf{LLM judge}: To mitigate correlated biases, we use
+    \item \textbf{LLM judge and pipeline bias}: To mitigate correlated biases, we use
           separate models for generation (Gemini 2.5 Flash) and
           evaluation (Gemini 3.0 Flash). While this reduces same-model
-          bias, both models share the Gemini family's training
-          distribution. Future work should incorporate independent
+          bias, all pipeline stages---query generation (template-based
+          with Gemini-family entity extraction), answer generation,
+          and evaluation---use models from the same Gemini family,
+          sharing training distributions and potential blind spots.
+          Future work should incorporate independent
           human evaluation for additional validation.
+    \item \textbf{KG-derived ground truth}: Ground-truth answers are
+          derived from the knowledge graph's structured data.  This
+          means the evaluation inherently measures how well each
+          condition conveys KG information---which is the intended
+          research question---but it also introduces a potential
+          circularity: conditions that present KG data more directly
+          (C3/C6/C6+) may score higher because the evaluation rewards
+          textual proximity to KG-derived facts.  A human-evaluated
+          calibration subset, using independently sourced reference
+          answers, would anchor the automated scores and is an
+          important direction for future work.
     \item \textbf{Single retrieval system}: Our results are specific
           to Vertex AI Vector Search 2.0 with \texttt{gemini-embedding-001}.
           We chose this system intentionally: it represents the
@@ -1062,13 +1239,18 @@ spanning four industry domains and seven conditions, we found that:
           ($d = 0.61$).
     \item The Enhanced+ variant with richer navigational affordances
           achieves the highest absolute scores (accuracy: 4.85/5,
-          completeness: 4.55/5), a +34.0\% improvement over the
-          baseline ($d = 0.65$).
+          completeness: 4.55/5), though the incremental gain over the
+          base enhanced format is not statistically significant
+          ($\Delta = +0.06$, $d = 0.08$).
     \item Agentic RAG with link traversal significantly improves
           both accuracy (+13.1\%) and completeness (+20.1\%) over
-          standard RAG.
-    \item These effects generalize across editorial, legal, travel,
-          and e-commerce domains.
+          standard RAG, though its contribution is complementary:
+          when document format is already optimized, the agent adds
+          negligible accuracy lift (C3: 4.69 vs.\ C6: 4.70).
+    \item These effects generalize in direction across editorial,
+          legal, travel, and e-commerce domains, though their
+          magnitude varies with domain characteristics
+          (see Table~\ref{tab:domain}).
 \end{enumerate}
 
 Our work provides empirical evidence that the Semantic Web's original

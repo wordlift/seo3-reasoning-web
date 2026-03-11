@@ -53,3 +53,5 @@ paper/*.fls
 
 # Preview/temp artifacts
 paper/preview.html
+paper/samples/
+paper/figures/*.png

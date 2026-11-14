@@ -19,7 +19,7 @@ def mayReviewTopicGap (e : TopicEvidence) : Bool :=
 theorem cannot_review_without_site_graph (e : TopicEvidence)
     (h : e.independentSiteProfileValid = false) :
     mayReviewTopicGap e = false := by
-  simp [mayReviewTopicGap, h, Bool.and_assoc]
+  simp [mayReviewTopicGap, h]
 
 theorem cannot_review_without_serp (e : TopicEvidence)
     (h : e.serpValid = false) :
@@ -39,7 +39,7 @@ def mayReviewAICitationGap (e : AIEvidence) : Bool :=
 theorem cannot_review_ai_gap_without_retrieval (e : AIEvidence)
     (h : e.retrievalEvidence = false) :
     mayReviewAICitationGap e = false := by
-  simp [mayReviewAICitationGap, h, Bool.and_assoc]
+  simp [mayReviewAICitationGap, h]
 
 inductive Claim
   | topicalAssociation

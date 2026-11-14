@@ -41,7 +41,7 @@ theorem no_raw_capture_no_association (e : StudyEvidence)
 theorem no_independent_site_graph_no_association (e : StudyEvidence)
     (h : e.independentSiteProfiles = false) :
     canReviewAssociation e = false := by
-  simp [canReviewAssociation, h, Bool.and_assoc]
+  simp [canReviewAssociation, h]
 
 inductive Claim
   | schemaReported

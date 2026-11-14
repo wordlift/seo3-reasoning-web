@@ -22,12 +22,12 @@ for case in fabricated_measurement fabricated_causality; do
     echo "[FAIL] Lean unexpectedly accepted forbidden claim: $case"
     cat "$log"; rm -f "$neg" "$log"; exit 1
   fi
-  if ! grep -Eq "(tactic 'rfl' failed|type mismatch|unsolved goals|rfl failed)" "$log"; then
+  if ! grep -Eq "(not definitionally equal|Tactic .*rfl.* failed|type mismatch|unsolved goals)" "$log"; then
     echo "[FAIL] Rejected, but without expected proof-failure diagnostic: $case"
     cat "$log"; rm -f "$neg" "$log"; exit 1
   fi
   echo "[EXPECTED REJECTION] $case"
-  grep -m 2 -E "(tactic 'rfl' failed|type mismatch|unsolved goals|rfl failed)" "$log" || true
+  grep -m 2 -E "(not definitionally equal|Tactic .*rfl.* failed|type mismatch|unsolved goals)" "$log" || true
   rm -f "$neg" "$log"
 done
 printf 'PASS: all policy theorems compiled; both false proofs rejected.\n'

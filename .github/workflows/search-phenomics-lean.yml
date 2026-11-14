@@ -1,0 +1,31 @@
+name: Search Phenomics — Lean proof verification
+on:
+  pull_request:
+    paths:
+      - 'experiments/search-phenomics/**'
+      - '.github/workflows/search-phenomics-lean.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/search-phenomics/**'
+      - '.github/workflows/search-phenomics-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prove:
+    name: Compile proofs and reject false inferences
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leanprover/lean-action@v1
+        with:
+          lake-package-directory: experiments/search-phenomics
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-github-cache: false
+      - name: Formal proof checks
+        working-directory: experiments/search-phenomics
+        run: bash scripts/run_proofs.sh

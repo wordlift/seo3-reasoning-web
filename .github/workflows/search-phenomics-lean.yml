@@ -1,0 +1,29 @@
+name: Search Phenomics — Lean proof verification
+on:
+  pull_request:
+    paths:
+      - 'experiments/search-phenomics/**'
+      - '.github/workflows/search-phenomics-lean.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'experiments/search-phenomics/**'
+      - '.github/workflows/search-phenomics-lean.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  prove:
+    name: Compile proofs and reject false inferences
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean compiler (no Lake project needed)
+        working-directory: experiments/search-phenomics
+        shell: bash
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain "$(cat lean-toolchain)"
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Formal proof checks
+        working-directory: experiments/search-phenomics
+        run: bash scripts/run_proofs.sh
